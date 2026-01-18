@@ -83,42 +83,42 @@ export const OfflineIntelligence: React.FC<OfflineIntelligenceProps> = ({
   const COLORS = ['#d4af37', '#c19a2f', '#ae8527', '#9b701f', '#886017', '#10b981', '#8b5cf6', '#ef4444'];
 
   return (
-    <div className="fixed inset-0 z-[500] bg-neutral-950/80 backdrop-blur-2xl overflow-hidden">
+    <div className="fixed inset-0 z-[500] bg-neutral-950/85 backdrop-blur-3xl overflow-hidden">
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full h-full bg-gradient-to-br from-neutral-50 via-white to-primary-50/20 overflow-y-auto"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full h-full bg-white overflow-y-auto"
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-2xl border-b border-neutral-200/60 shadow-lg">
-          <div className="max-w-[1800px] mx-auto px-12 py-8">
+        <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-2xl border-b border-neutral-200">
+          <div className="max-w-[1800px] mx-auto px-10 py-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-xl">
-                  <Brain size={32} className="text-white" strokeWidth={2.5} />
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-950 flex items-center justify-center shadow-lg">
+                  <Brain size={26} className="text-primary-400" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h1 className="text-5xl font-black tracking-tight text-neutral-900">
+                  <h1 className="text-4xl font-black tracking-tight text-neutral-900">
                     Culinary Intelligence
                   </h1>
-                  <p className="text-sm font-bold text-primary-600 uppercase tracking-wider mt-1 flex items-center gap-2">
-                    <Cpu size={14} strokeWidth={3} />
+                  <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-[0.12em] mt-1.5 flex items-center gap-2">
+                    <Cpu size={11} strokeWidth={3} />
                     Offline ML Engine · {currentInventory.length} Ingredients · {recipes.length} Recipes
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="w-14 h-14 rounded-2xl bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-all"
+                className="w-12 h-12 rounded-2xl bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-all duration-200"
               >
-                <X size={24} className="text-neutral-700" strokeWidth={2.5} />
+                <X size={20} className="text-neutral-700" strokeWidth={2.5} />
               </button>
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex gap-3 mt-8 overflow-x-auto pb-2">
+            <div className="flex gap-2 mt-6 overflow-x-auto pb-2">
               {[
                 { id: 'overview' as InsightTab, label: 'Overview', icon: Activity },
                 { id: 'recommendations' as InsightTab, label: 'Smart Recommendations', icon: Sparkles },
@@ -131,13 +131,13 @@ export const OfflineIntelligence: React.FC<OfflineIntelligenceProps> = ({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-3 ${
+                    className={`px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-[0.08em] transition-all duration-200 whitespace-nowrap flex items-center gap-2.5 ${
                       activeTab === tab.id
-                        ? 'bg-gradient-to-r from-neutral-900 to-neutral-800 text-white shadow-xl'
-                        : 'bg-white/60 text-neutral-600 hover:bg-white hover:text-neutral-900 border border-neutral-200/60'
+                        ? 'bg-neutral-900 text-white shadow-md'
+                        : 'bg-neutral-50 text-neutral-600 hover:bg-neutral-100 border border-neutral-200'
                     }`}
                   >
-                    <Icon size={18} strokeWidth={2.5} />
+                    <Icon size={14} strokeWidth={2.5} />
                     {tab.label}
                   </button>
                 );
@@ -147,13 +147,13 @@ export const OfflineIntelligence: React.FC<OfflineIntelligenceProps> = ({
         </div>
 
         {/* Content */}
-        <div className="max-w-[1800px] mx-auto px-12 py-12">
+        <div className="max-w-[1800px] mx-auto px-10 py-10">
           {loading ? (
-            <div className="flex items-center justify-center py-32">
+            <div className="flex items-center justify-center py-24">
               <div className="text-center">
-                <Cpu size={64} className="mx-auto mb-6 text-primary-500 animate-pulse" strokeWidth={2} />
+                <Cpu size={48} className="mx-auto mb-5 text-neutral-900" strokeWidth={2} />
                 <p className="text-2xl font-black text-neutral-900">Processing Intelligence...</p>
-                <p className="text-sm font-semibold text-neutral-500 mt-2">Analyzing patterns with offline ML</p>
+                <p className="text-xs font-semibold text-neutral-500 mt-2 uppercase tracking-wide">Analyzing patterns with offline ML</p>
               </div>
             </div>
           ) : (
@@ -174,73 +174,78 @@ export const OfflineIntelligence: React.FC<OfflineIntelligenceProps> = ({
     return (
       <motion.div
         key="overview"
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="space-y-10"
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="space-y-8"
       >
         {/* Key Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <motion.div
-            whileHover={{ y: -4 }}
-            className="p-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-3xl shadow-xl"
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
+            className="p-7 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg"
           >
-            <div className="flex items-center justify-between mb-4">
-              <Shield size={32} className="text-white/80" strokeWidth={2} />
-              <CheckCircle size={24} className="text-white/60" strokeWidth={2} />
+            <div className="flex items-center justify-between mb-3">
+              <Shield size={28} className="text-white/80" strokeWidth={2} />
+              <CheckCircle size={20} className="text-white/60" strokeWidth={2} />
             </div>
-            <div className="text-5xl font-black text-white mb-2">
+            <div className="text-4xl font-black text-white mb-1.5">
               {Math.round((pantryHealth?.utilizationRate || 0) * 100)}%
             </div>
-            <div className="text-sm font-bold text-white/80 uppercase tracking-wider">
+            <div className="text-xs font-bold text-white/80 uppercase tracking-wide">
               Pantry Utilization
             </div>
           </motion.div>
 
           <motion.div
-            whileHover={{ y: -4 }}
-            className="p-8 bg-gradient-to-br from-rose-500 to-rose-600 rounded-3xl shadow-xl"
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
+            className="p-7 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl shadow-lg"
           >
-            <div className="flex items-center justify-between mb-4">
-              <AlertOctagon size={32} className="text-white/80" strokeWidth={2} />
-              <Clock size={24} className="text-white/60" strokeWidth={2} />
+            <div className="flex items-center justify-between mb-3">
+              <AlertOctagon size={28} className="text-white/80" strokeWidth={2} />
+              <Clock size={20} className="text-white/60" strokeWidth={2} />
             </div>
-            <div className="text-5xl font-black text-white mb-2">
+            <div className="text-4xl font-black text-white mb-1.5">
               {expirations.filter(e => e.urgency === 'high' || e.urgency === 'critical').length}
             </div>
-            <div className="text-sm font-bold text-white/80 uppercase tracking-wider">
+            <div className="text-xs font-bold text-white/80 uppercase tracking-wide">
               Expiring Soon
             </div>
           </motion.div>
 
           <motion.div
-            whileHover={{ y: -4 }}
-            className="p-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-3xl shadow-xl"
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
+            className="p-7 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl shadow-lg"
           >
-            <div className="flex items-center justify-between mb-4">
-              <Sparkles size={32} className="text-white/80" strokeWidth={2} />
-              <TrendingUp size={24} className="text-white/60" strokeWidth={2} />
+            <div className="flex items-center justify-between mb-3">
+              <Sparkles size={28} className="text-white/80" strokeWidth={2} />
+              <TrendingUp size={20} className="text-white/60" strokeWidth={2} />
             </div>
-            <div className="text-5xl font-black text-white mb-2">
+            <div className="text-4xl font-black text-white mb-1.5">
               {recommendations.length}
             </div>
-            <div className="text-sm font-bold text-white/80 uppercase tracking-wider">
+            <div className="text-xs font-bold text-white/80 uppercase tracking-wide">
               AI Suggestions
             </div>
           </motion.div>
 
           <motion.div
-            whileHover={{ y: -4 }}
-            className="p-8 bg-gradient-to-br from-violet-500 to-violet-600 rounded-3xl shadow-xl"
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
+            className="p-7 bg-gradient-to-br from-violet-500 to-violet-600 rounded-2xl shadow-lg"
           >
-            <div className="flex items-center justify-between mb-4">
-              <Trophy size={32} className="text-white/80" strokeWidth={2} />
-              <Award size={24} className="text-white/60" strokeWidth={2} />
+            <div className="flex items-center justify-between mb-3">
+              <Trophy size={28} className="text-white/80" strokeWidth={2} />
+              <Award size={20} className="text-white/60" strokeWidth={2} />
             </div>
-            <div className="text-5xl font-black text-white mb-2">
+            <div className="text-4xl font-black text-white mb-1.5">
               {Math.round((skillMetrics?.overallLevel || 0) * 100)}
             </div>
-            <div className="text-sm font-bold text-white/80 uppercase tracking-wider">
+            <div className="text-xs font-bold text-white/80 uppercase tracking-wide">
               Skill Level
             </div>
           </motion.div>

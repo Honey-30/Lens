@@ -83,16 +83,16 @@ const Analyzer: React.FC<AnalyzerProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen pt-36 pb-20 px-8 md:px-16 flex flex-col items-center justify-center bg-gradient-to-br from-neutral-0 via-neutral-25 to-neutral-50">
+    <div className="min-h-screen pt-24 pb-16 px-8 md:px-16 flex flex-col items-center justify-center bg-gradient-to-br from-neutral-0 via-neutral-25 to-neutral-50">
       <AnimatePresence mode="wait">
         {!isAnalyzing ? (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="max-w-5xl w-full flex flex-col items-center">
-            <div className="text-center mb-20">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="max-w-4xl w-full flex flex-col items-center">
+            <div className="text-center mb-12">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="flex items-center justify-center gap-3 mb-10"
+                className="flex items-center justify-center gap-3 mb-8"
               >
                 <div className="px-4 py-2 bg-white/70 backdrop-blur-xl rounded-full border border-neutral-200/50 shadow-sm">
                   <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ const Analyzer: React.FC<AnalyzerProps> = ({ onComplete }) => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.03em] mb-8 text-neutral-950 leading-[0.92] antialiased"
+                className="text-5xl md:text-6xl lg:text-7xl font-black tracking-[-0.03em] mb-6 text-neutral-950 leading-[0.92] antialiased"
               >
                 Visual <span className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-800 bg-clip-text text-transparent font-serif italic font-normal">Analysis</span>
               </motion.h2>
@@ -115,7 +115,7 @@ const Analyzer: React.FC<AnalyzerProps> = ({ onComplete }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.7, delay: 0.5 }}
-                className="text-neutral-600 text-lg md:text-xl font-light max-w-2xl mx-auto leading-[1.6] tracking-[-0.01em]"
+                className="text-neutral-600 text-base md:text-lg font-light max-w-2xl mx-auto leading-[1.6] tracking-[-0.01em]"
               >
                 {isOnline 
                   ? 'Multi-stage cloud-accelerated perception pipeline for maximum precision.'
@@ -139,27 +139,25 @@ const Analyzer: React.FC<AnalyzerProps> = ({ onComplete }) => {
 
             <motion.div 
               onClick={() => fileInputRef.current?.click()} 
-              whileHover={{ scale: 1.008, y: -6 }} 
+              whileHover={{ y: -3 }} 
               whileTap={{ scale: 0.995 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative aspect-video w-full max-w-3xl rounded-[3.5rem] bg-white/60 backdrop-blur-2xl flex flex-col items-center justify-center shadow-[0_32px_96px_-12px_rgba(0,0,0,0.15)] border border-neutral-200/40 cursor-pointer group overflow-hidden"
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="relative aspect-video w-full max-w-3xl rounded-[3rem] bg-white/80 backdrop-blur-2xl flex flex-col items-center justify-center shadow-[0_24px_80px_-12px_rgba(0,0,0,0.12)] border border-neutral-200/60 cursor-pointer group overflow-hidden"
             >
-              {/* Ambient hover glow */}
-              <motion.div 
-                className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-primary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-              />
+              {/* Subtle hover effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-500/[0.02] via-transparent to-primary-600/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <motion.div 
-                className="w-20 h-20 rounded-[1.75rem] bg-gradient-to-br from-neutral-900 to-neutral-950 flex items-center justify-center mb-6 shadow-2xl relative z-10"
-                whileHover={{ scale: 1.15, rotate: 5 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="w-20 h-20 rounded-3xl bg-gradient-to-br from-neutral-900 to-neutral-950 flex items-center justify-center mb-5 shadow-xl relative z-10"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
               >
                 <Camera color="#D4AF37" size={28} strokeWidth={2} />
               </motion.div>
               
-              <div className="relative z-10 space-y-3">
+              <div className="relative z-10 space-y-2">
                 <span className="text-xs uppercase tracking-[0.15em] font-bold text-neutral-800 block">Upload Image</span>
-                <span className="text-[10px] uppercase tracking-[0.12em] font-medium text-neutral-400 block">Click or drag to begin analysis</span>
+                <span className="text-[10px] uppercase tracking-[0.12em] font-medium text-neutral-400 block">Click to begin analysis</span>
               </div>
               
               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
@@ -213,12 +211,10 @@ const Analyzer: React.FC<AnalyzerProps> = ({ onComplete }) => {
                        transition={{ delay: 0.1 * steps.indexOf(step) }}
                      >
                         <motion.div 
-                          className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-all duration-700 ${
-                            step.status === 'complete' ? 'bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30' : 
-                            step.status === 'active' ? 'bg-gradient-to-br from-neutral-900 to-neutral-950 text-white shadow-2xl scale-110 ring-4 ring-primary-500/20' : 'bg-neutral-100 text-neutral-300'
+                          className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-all duration-500 ${
+                            step.status === 'complete' ? 'bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/20' : 
+                            step.status === 'active' ? 'bg-gradient-to-br from-neutral-900 to-neutral-950 text-white shadow-xl ring-2 ring-primary-500/30' : 'bg-neutral-100 text-neutral-300'
                           }`}
-                          animate={step.status === 'active' ? { scale: [1.1, 1.15, 1.1] } : {}}
-                          transition={{ duration: 2, repeat: step.status === 'active' ? Infinity : 0 }}
                         >
                            {step.id === 'detect' && <Cpu size={18} strokeWidth={2.5} />}
                            {step.id === 'segment' && <Layers size={18} strokeWidth={2.5} />}

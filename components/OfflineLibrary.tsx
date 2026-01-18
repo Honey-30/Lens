@@ -95,34 +95,34 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
   );
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-neutral-950/60 backdrop-blur-xl px-4 md:px-8">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-neutral-950/85 backdrop-blur-3xl px-4 md:px-8">
       <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 20 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-7xl h-[90vh] bg-gradient-to-br from-white via-neutral-25 to-neutral-50 rounded-[3rem] shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] border border-neutral-200/40 overflow-hidden flex flex-col"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-7xl h-[90vh] bg-white rounded-[2.5rem] shadow-2xl border border-neutral-200 overflow-hidden flex flex-col"
       >
         {/* Header */}
-        <div className="px-10 py-8 border-b border-neutral-200/40 flex items-center justify-between bg-white/60 backdrop-blur-xl">
+        <div className="px-8 py-6 border-b border-neutral-200 flex items-center justify-between bg-white">
           <div>
-            <h2 className="text-4xl font-black tracking-[-0.03em] text-neutral-950 mb-2">
+            <h2 className="text-3xl font-black tracking-[-0.03em] text-neutral-950 mb-1.5">
               Offline <span className="bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">Library</span>
             </h2>
-            <p className="text-sm text-neutral-500 font-medium tracking-tight">
+            <p className="text-xs text-neutral-500 font-medium tracking-tight">
               {stats && `${stats.totalRecipes} recipes · ${stats.totalCooks} cooked · ${stats.favoriteRecipes} favorites`}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-12 h-12 rounded-full bg-neutral-100 hover:bg-neutral-900 text-neutral-600 hover:text-white transition-all flex items-center justify-center group"
+            className="w-11 h-11 rounded-2xl bg-neutral-100 hover:bg-neutral-900 text-neutral-600 hover:text-white transition-all duration-200 flex items-center justify-center"
           >
-            <X size={20} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
+            <X size={18} strokeWidth={2.5} />
           </button>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="px-10 py-6 border-b border-neutral-200/30 bg-white/40 backdrop-blur-md flex gap-3 overflow-x-auto">
+        <div className="px-8 py-5 border-b border-neutral-200 bg-neutral-50 flex gap-2 overflow-x-auto">
           {[
             { id: 'recipes' as ViewMode, label: 'All Recipes', icon: BookMarked, count: recipes.length },
             { id: 'favorites' as ViewMode, label: 'Favorites', icon: Heart, count: favorites.length },
@@ -138,16 +138,16 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
               <button
                 key={tab.id}
                 onClick={() => setViewMode(tab.id)}
-                className={`px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-[0.1em] transition-all flex items-center gap-3 whitespace-nowrap ${
+                className={`px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.08em] transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
                   isActive
-                    ? 'bg-neutral-950 text-white shadow-lg'
-                    : 'bg-white/60 text-neutral-600 hover:bg-white hover:text-neutral-900'
+                    ? 'bg-neutral-950 text-white shadow-md'
+                    : 'bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200'
                 }`}
               >
-                <Icon size={14} strokeWidth={2.5} />
+                <Icon size={13} strokeWidth={2.5} />
                 {tab.label}
                 {tab.count > 0 && (
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                  <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-black ${
                     isActive ? 'bg-primary-500 text-white' : 'bg-neutral-200 text-neutral-700'
                   }`}>
                     {tab.count}
@@ -187,7 +187,8 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
                   {filteredRecipes.map((recipe) => (
                     <motion.div
                       key={recipe.id}
-                      whileHover={{ y: -4 }}
+                      whileHover={{ y: -2 }}
+                      transition={{ duration: 0.2 }}
                       className="bg-white/70 backdrop-blur-md p-6 rounded-3xl border border-neutral-200/40 shadow-md hover:shadow-xl transition-all cursor-pointer group"
                       onClick={() => setSelectedRecipe(recipe)}
                     >
@@ -501,7 +502,8 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
         {/* Stats Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <motion.div
-            whileHover={{ y: -4 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
             className="p-6 bg-gradient-to-br from-primary-500 to-primary-600 rounded-3xl shadow-xl"
           >
             <div className="flex items-center justify-between mb-4">
@@ -513,7 +515,8 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
           </motion.div>
 
           <motion.div
-            whileHover={{ y: -4 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
             className="p-6 bg-gradient-to-br from-rose-500 to-rose-600 rounded-3xl shadow-xl"
           >
             <div className="flex items-center justify-between mb-4">
@@ -525,7 +528,8 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
           </motion.div>
 
           <motion.div
-            whileHover={{ y: -4 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
             className="p-6 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-3xl shadow-xl"
           >
             <div className="flex items-center justify-between mb-4">
@@ -539,7 +543,8 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
           </motion.div>
 
           <motion.div
-            whileHover={{ y: -4 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
             className="p-6 bg-gradient-to-br from-violet-500 to-violet-600 rounded-3xl shadow-xl"
           >
             <div className="flex items-center justify-between mb-4">

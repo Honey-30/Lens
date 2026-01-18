@@ -44,22 +44,22 @@ const Dashboard: React.FC<DashboardProps> = ({ inventory, protocol, onSynthesize
   const titleSize = isHighDensity ? "text-xl" : "text-2xl";
 
   return (
-    <div className="min-h-screen pt-32 pb-24 px-8 md:px-16 max-w-[1900px] mx-auto bg-gradient-to-br from-neutral-0 via-neutral-25 to-neutral-50 transition-all duration-700">
+    <div className="min-h-screen pt-28 pb-20 px-8 md:px-16 max-w-[1900px] mx-auto bg-gradient-to-br from-neutral-0 via-neutral-25 to-neutral-50 transition-all duration-700">
       <motion.div 
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14"
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10"
       >
         
         {/* Left Column: Metrics */}
-        <div className="lg:col-span-4 space-y-10">
-          <section className="bg-white/70 backdrop-blur-2xl p-10 md:p-12 rounded-[3rem] border border-neutral-200/40 shadow-lg">
-            <div className="flex justify-between items-start mb-10">
+        <div className="lg:col-span-4 space-y-8">
+          <section className="bg-white/70 backdrop-blur-2xl p-8 md:p-10 rounded-[2.5rem] border border-neutral-200/60 shadow-lg">
+            <div className="flex justify-between items-start mb-8">
                <h3 className="text-xs uppercase tracking-[0.15em] text-neutral-500 font-bold">Intelligence Context</h3>
                <ShieldCheck className="text-primary-600/70" size={16} strokeWidth={2.5} />
             </div>
-            <div className="space-y-7">
+            <div className="space-y-6">
               <div className="flex items-center gap-5">
                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center shadow-inner">
                     <Sun size={16} className={scanQuality === 'OPTIMAL' ? 'text-emerald-600' : 'text-amber-600'} strokeWidth={2.5} />
@@ -261,19 +261,20 @@ const Dashboard: React.FC<DashboardProps> = ({ inventory, protocol, onSynthesize
         />
       )}
 
-      {/* Floating Intelligence Button */}
+      {/* Floating Intelligence Button - Premium Design */}
       <motion.button
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-        whileHover={{ scale: 1.1 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
+        whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setShowIntelligence(true)}
-        className="fixed bottom-12 right-12 w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 shadow-2xl flex items-center justify-center z-50 hover:shadow-3xl transition-all group"
+        className="fixed bottom-10 right-10 w-16 h-16 rounded-3xl bg-gradient-to-br from-neutral-900 via-neutral-950 to-black shadow-[0_12px_40px_-8px_rgba(0,0,0,0.4)] flex items-center justify-center z-50 hover:shadow-[0_16px_48px_-8px_rgba(0,0,0,0.5)] transition-all group border border-white/10"
       >
-        <Brain size={32} className="text-white group-hover:scale-110 transition-transform" strokeWidth={2.5} />
-        <div className="absolute -top-2 -right-2 w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center">
-          <Sparkles size={16} className="text-white" strokeWidth={3} />
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-white/5 to-transparent" />
+        <Brain size={28} className="text-primary-400 group-hover:text-primary-300 transition-colors relative z-10 drop-shadow-lg" strokeWidth={2.5} />
+        <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center shadow-lg">
+          <Sparkles size={12} className="text-white" strokeWidth={3} />
         </div>
       </motion.button>
     </div>
