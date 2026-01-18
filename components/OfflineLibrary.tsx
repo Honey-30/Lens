@@ -7,9 +7,24 @@ import {
   BarChart3, PieChart as PieChartIcon, Activity, Award,
   Flame, Utensils, Target, Zap
 } from 'lucide-react';
-import { offlineFeatures, SavedRecipe, MealPlan, ShoppingListItem, RecipeCollection } from '../services/offlineFeaturesService';
+import { offlineFeatures, MealPlan, ShoppingListItem, RecipeCollection } from '../services/offlineFeaturesService';
+import { SavedRecipe } from '../types';
 import { NeuralProtocol, Ingredient } from '../types';
 import { BarChart, Bar, PieChart, Pie, LineChart, Line, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
+
+type OfflineStats = {
+  totalRecipes: number;
+  favoriteRecipes: number;
+  totalCooks: number;
+  plannedMeals: number;
+  completedMeals: number;
+  shoppingItems: number;
+  uncheckedItems: number;
+  mostCooked: SavedRecipe | null;
+  favoriteCount: number;
+  averageRating: number;
+  mostCookedRecipe: string;
+};
 
 interface OfflineLibraryProps {
   onClose: () => void;
@@ -26,7 +41,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
   const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
   const [shoppingList, setShoppingList] = useState<ShoppingListItem[]>([]);
   const [collections, setCollections] = useState<RecipeCollection[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<OfflineStats | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState<SavedRecipe | null>(null);
 
@@ -35,14 +50,15 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
   }, [viewMode]);
 
   const loadData = async () => {
-    const [allRecipes, favs, plans, shopping, colls, statistics] = await Promise.all([
+    const [allRecipes, favs, plans, shopping, colls] = await Promise.all([
       offlineFeatures.getSavedRecipes(),
       offlineFeatures.getFavoriteRecipes(),
       offlineFeatures.getMealPlansForWeek(new Date().toISOString().split('T')[0]),
       offlineFeatures.getShoppingList(),
       offlineFeatures.getCollections(),
-      offlineFeatures.getStats(),
     ]);
+
+    const statistics = await offlineFeatures.getStats() as OfflineStats;
 
     setRecipes(allRecipes);
     setFavorites(favs);
@@ -74,8 +90,8 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
   };
 
   const filteredRecipes = recipes.filter(r => 
-    r.protocol.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
+    r.protocol.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    r.tags.some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -202,7 +218,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
                       <div className="flex items-center gap-4 text-xs text-neutral-600 mb-4">
                         <div className="flex items-center gap-1.5">
                           <Clock size={12} strokeWidth={2.5} />
-                          <span className="font-semibold">{recipe.protocol.timing.total} min</span>
+                          <span className="font-semibold">{recipe.protocol.timing?.total || recipe.protocol.duration_minutes || 0} min</span>
                         </div>
                         {recipe.cookCount > 0 && (
                           <div className="flex items-center gap-1.5">
@@ -226,7 +242,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
                       )}
 
                       <div className="flex flex-wrap gap-2">
-                        {recipe.tags.slice(0, 3).map((tag) => (
+                        {recipe.tags.slice(0, 3).map((tag: string) => (
                           <span
                             key={tag}
                             className="px-3 py-1 bg-neutral-100 rounded-full text-[10px] font-bold uppercase tracking-wider text-neutral-600"
@@ -368,7 +384,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
                 <div className="grid grid-cols-3 gap-4">
                   <div className="p-4 bg-neutral-50 rounded-2xl">
                     <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider mb-1">Time</p>
-                    <p className="text-2xl font-black text-neutral-900">{selectedRecipe.protocol.timing.total}m</p>
+                    <p className="text-2xl font-black text-neutral-900">{selectedRecipe.protocol.timing?.total || selectedRecipe.protocol.duration_minutes || 0}m</p>
                   </div>
                   <div className="p-4 bg-neutral-50 rounded-2xl">
                     <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider mb-1">Cooked</p>
@@ -416,7 +432,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
 
   // Stats rendering function
   function renderStats() {
-    const stats = offlineFeatures.getStats();
+    // Use component-level stats state, not getStats() directly
     const COLORS = ['#d4af37', '#c19a2f', '#ae8527', '#9b701f', '#886017'];
     
     // Prepare data for charts
@@ -434,7 +450,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
     const cookingActivityData = recipes
       .slice(0, 10)
       .map(recipe => ({
-        name: recipe.protocol.name.substring(0, 15) + '...',
+        name: (recipe.protocol.name || recipe.protocol.title || 'Recipe').substring(0, 15) + '...',
         cooks: recipe.cookCount || 0,
         rating: recipe.rating || 0
       }));
@@ -492,7 +508,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
               <ChefHat size={32} className="text-white/80" strokeWidth={2} />
               <Award size={24} className="text-white/60" strokeWidth={2} />
             </div>
-            <div className="text-5xl font-black text-white mb-1">{stats.totalRecipes}</div>
+            <div className="text-5xl font-black text-white mb-1">{stats?.totalRecipes || 0}</div>
             <div className="text-sm font-bold text-white/80 uppercase tracking-wider">Total Recipes</div>
           </motion.div>
 
@@ -504,7 +520,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
               <Heart size={32} className="text-white/80" strokeWidth={2} />
               <Star size={24} className="text-white/60" strokeWidth={2} />
             </div>
-            <div className="text-5xl font-black text-white mb-1">{stats.favoriteCount}</div>
+            <div className="text-5xl font-black text-white mb-1">{stats?.favoriteCount || 0}</div>
             <div className="text-sm font-bold text-white/80 uppercase tracking-wider">Favorites</div>
           </motion.div>
 
@@ -530,7 +546,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
               <Utensils size={32} className="text-white/80" strokeWidth={2} />
               <Target size={24} className="text-white/60" strokeWidth={2} />
             </div>
-            <div className="text-5xl font-black text-white mb-1">{stats.averageRating.toFixed(1)}</div>
+            <div className="text-5xl font-black text-white mb-1">{stats?.averageRating?.toFixed(1) || '0.0'}</div>
             <div className="text-sm font-bold text-white/80 uppercase tracking-wider">Avg Rating</div>
           </motion.div>
         </div>
@@ -719,7 +735,7 @@ const OfflineLibrary: React.FC<OfflineLibraryProps> = ({ onClose, currentInvento
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20">
               <div className="text-3xl font-black text-white mb-2">
-                {stats.mostCookedRecipe?.split(' ').slice(0, 3).join(' ') || 'N/A'}
+                {stats?.mostCookedRecipe?.split(' ').slice(0, 3).join(' ') || 'N/A'}
               </div>
               <div className="text-sm font-bold text-white/60 uppercase tracking-wider">Most Cooked</div>
             </div>

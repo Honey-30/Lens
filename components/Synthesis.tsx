@@ -304,7 +304,7 @@ const Synthesis: React.FC<SynthesisProps> = ({ inventory, onExecute, onBack, onP
                       </div>
                       <div>
                         <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Ingredients</div>
-                        <div className="text-sm font-black text-neutral-900">{recipe.ingredients.length} items</div>
+                        <div className="text-sm font-black text-neutral-900">{recipe.ingredients?.length || 0} items</div>
                       </div>
                     </div>
 

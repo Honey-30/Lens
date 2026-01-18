@@ -37,6 +37,8 @@ export interface Ingredient {
   molecularProfile?: string[];
   flavorNodes?: string[];
   verificationStatus?: 'unverified' | 'confirmed' | 'dismissed';
+  quantity?: number;
+  unit?: string;
 }
 
 export interface RecallHypothesis {
@@ -71,26 +73,42 @@ export interface ChatMessage {
 }
 
 export interface NeuralProtocol {
-  id: string;
+  id?: string;
+  name?: string;
   title: string;
   description: string;
-  complexity: 'Low' | 'Medium' | 'High';
-  duration_minutes: number;
-  ingredients_used: string[];
+  complexity?: 'Low' | 'Medium' | 'High';
+  difficulty?: string;
+  duration_minutes?: number;
+  ingredients_used?: string[];
+  ingredients?: Ingredient[];
   missing_ingredients?: string[];
-  molecularAffinity: number; // 0-100
+  molecularAffinity?: number; // 0-100
   instructions: ProtocolStep[];
-  platingTips: string[];
+  platingTips?: string[];
   drinkPairing: DrinkPairing;
   nutrition: {
     calories: number;
     protein: number;
     carbs: number;
     fat: number;
+    fiber?: number;
+  };
+  nutritionalProfile?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+    fiber: number;
+  };
+  cuisineStyle?: string;
+  timing?: {
+    total: number;
   };
   visualUrl?: string;
+  drinkVisualUrl?: string;
   schematicUrl?: string;
-  groundingSources: string[];
+  groundingSources?: string[];
   impactMetrics?: ImpactMetrics;
   substitutionRisk?: 'SAFE' | 'EXPERIMENTAL' | 'RISKY';
   isOffline?: boolean;
@@ -142,4 +160,38 @@ export interface CacheStats {
   misses: number;
   size: number;
   evictions: number;
+}
+
+// Offline Features Types
+export interface SavedRecipe {
+  id: string;
+  protocol: NeuralProtocol;
+  ingredients: Ingredient[];
+  savedAt: number;
+  favorite: boolean;
+  tags: string[];
+  notes?: string;
+  cookCount: number;
+  lastCooked?: number;
+  rating?: number;
+  // Legacy compatibility
+  title?: string;
+  description?: string;
+  instructions?: ProtocolStep[];
+  drinkPairing?: DrinkPairing;
+  nutrition?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    fiber?: number;
+  };
+}
+
+export interface Instruction {
+  order: number;
+  text: string;
+  technique?: string;
+  duration?: number;
+  temperature?: string;
 }

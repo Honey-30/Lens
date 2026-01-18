@@ -14,7 +14,8 @@ import {
 } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { Ingredient } from '../types';
-import { offlineFeatures, SavedRecipe } from '../services/offlineFeaturesService';
+import { offlineFeatures } from '../services/offlineFeaturesService';
+import { SavedRecipe } from '../types';
 import offlineML from '../services/offlineML';
 
 interface OfflineIntelligenceProps {

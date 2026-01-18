@@ -20,7 +20,7 @@ export const validateIngredients = (
   const validatedUsed: string[] = [];
   const identifiedHallucinations: string[] = [];
 
-  protocol.ingredients_used.forEach(ing => {
+  (protocol.ingredients_used || []).forEach(ing => {
     if (mlNames.has(normalizeName(ing))) {
       validatedUsed.push(ing);
     } else {

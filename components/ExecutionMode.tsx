@@ -469,7 +469,7 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
                         <RotateCcw size={18} strokeWidth={2.5} /> Reset
                       </button>
                    </div>
-                </div>
+                </motion.div>
               )}
            </motion.div>
          </AnimatePresence>

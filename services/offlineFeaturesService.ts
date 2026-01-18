@@ -9,22 +9,9 @@
 
 import { db } from '../utils/database';
 import { logger } from '../utils/logger';
-import { NeuralProtocol, Ingredient } from '../types';
+import { NeuralProtocol, Ingredient, SavedRecipe } from '../types';
 
 // Types for offline features
-export interface SavedRecipe {
-  id: string;
-  protocol: NeuralProtocol;
-  ingredients: Ingredient[];
-  savedAt: number;
-  favorite: boolean;
-  tags: string[];
-  notes?: string;
-  cookCount: number;
-  lastCooked?: number;
-  rating?: number;
-}
-
 export interface MealPlan {
   id: string;
   date: string; // YYYY-MM-DD
@@ -76,7 +63,7 @@ class OfflineFeaturesService {
       const request = indexedDB.open(this.dbName, this.dbVersion);
 
       request.onerror = () => {
-        logger.error('[OfflineFeatures] Database initialization failed', {}, request.error);
+        logger.error('[OfflineFeatures] Database initialization failed', {}, request.error ?? new Error('Unknown error'));
         reject(request.error);
       };
 
@@ -289,8 +276,8 @@ class OfflineFeaturesService {
     for (const ingredient of recipe.ingredients) {
       await this.addShoppingItem({
         name: ingredient.name,
-        quantity: ingredient.quantity || 1,
-        unit: ingredient.unit || 'unit',
+        quantity: ingredient.quantity ?? 1,
+        unit: ingredient.unit ?? 'unit',
         category: this._categorizeIngredient(ingredient.name),
         checked: false,
         recipeId: recipeId,
@@ -345,10 +332,24 @@ class OfflineFeaturesService {
 
   // ===== STATS & INSIGHTS =====
 
-  async getStats() {
+  async getStats(): Promise<{
+    totalRecipes: number;
+    favoriteRecipes: number;
+    totalCooks: number;
+    plannedMeals: number;
+    completedMeals: number;
+    shoppingItems: number;
+    uncheckedItems: number;
+    mostCooked: SavedRecipe | null;
+    favoriteCount: number;
+    averageRating: number;
+    mostCookedRecipe: string;
+  }> {
     const recipes = await this.getSavedRecipes();
     const mealPlans = await this._getAllFromStore<MealPlan>(STORES.MEAL_PLANS);
     const shoppingItems = await this.getShoppingList();
+
+    const mostCookedRecipe = recipes.sort((a, b) => b.cookCount - a.cookCount)[0] || null;
 
     return {
       totalRecipes: recipes.length,
@@ -358,8 +359,17 @@ class OfflineFeaturesService {
       completedMeals: mealPlans.filter(m => m.completed).length,
       shoppingItems: shoppingItems.length,
       uncheckedItems: shoppingItems.filter(i => !i.checked).length,
-      mostCooked: recipes.sort((a, b) => b.cookCount - a.cookCount)[0] || null,
+      mostCooked: mostCookedRecipe,
+      favoriteCount: recipes.filter(r => r.favorite).length,
+      averageRating: recipes.length > 0 
+        ? recipes.filter(r => r.rating).reduce((sum, r) => sum + (r.rating || 0), 0) / recipes.filter(r => r.rating).length
+        : 0,
+      mostCookedRecipe: mostCookedRecipe?.protocol?.title || 'None',
     };
+  }
+
+  async getAllRecipes(): Promise<SavedRecipe[]> {
+    return this.getSavedRecipes();
   }
 
   // ===== HELPER METHODS =====

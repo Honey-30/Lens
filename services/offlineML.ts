@@ -3,7 +3,7 @@
  * Elite machine learning models for offline culinary intelligence
  */
 
-import { Ingredient, NeuralProtocol, SavedRecipe } from '../types';
+import { Ingredient, NeuralProtocol, SavedRecipe, ProtocolStep } from '../types';
 import { offlineFeatures } from './offlineFeaturesService';
 
 // ==================== RECIPE RECOMMENDATION ENGINE ====================
@@ -31,11 +31,11 @@ export const recommendRecipes = async (
   const scores: RecipeScore[] = [];
 
   for (const recipe of allRecipes) {
-    const ingredientNames = currentIngredients.map(i => i.name.toLowerCase());
-    const recipeIngredients = recipe.protocol.ingredients.map(i => i.name.toLowerCase());
+    const ingredientNames = currentIngredients.map((i: Ingredient) => i.name.toLowerCase());
+    const recipeIngredients = (recipe.protocol.ingredients || []).map((i: Ingredient) => i.name.toLowerCase());
     
     // 1. Ingredient Match Score (Jaccard Similarity)
-    const intersection = ingredientNames.filter(i => recipeIngredients.includes(i));
+    const intersection = ingredientNames.filter((i: string) => recipeIngredients.includes(i));
     const union = new Set([...ingredientNames, ...recipeIngredients]);
     const ingredientMatch = intersection.length / union.size;
 
@@ -49,7 +49,7 @@ export const recommendRecipes = async (
     const nutritionalScore = calculateNutritionalBalance(recipe.protocol, currentIngredients);
 
     // 5. Skill Level Match
-    const difficultyScore = calculateSkillMatch(recipe.protocol.difficulty, userSkillLevel);
+    const difficultyScore = calculateSkillMatch(recipe.protocol.difficulty || 'medium', userSkillLevel);
 
     // Weighted combination
     const totalScore = 
@@ -78,7 +78,7 @@ export const recommendRecipes = async (
 function calculateHistoricalPreference(recipe: SavedRecipe, history: SavedRecipe[]): number {
   const cookCount = recipe.cookCount || 0;
   const rating = recipe.rating || 0;
-  const avgCookCount = history.reduce((sum, r) => sum + (r.cookCount || 0), 0) / Math.max(history.length, 1);
+  const avgCookCount = history.reduce((sum: number, r: SavedRecipe) => sum + (r.cookCount || 0), 0) / Math.max(history.length, 1);
   
   const normalizedCooks = Math.min(cookCount / Math.max(avgCookCount, 1), 2) / 2;
   const normalizedRating = rating / 5;
@@ -90,9 +90,9 @@ function calculateSeasonalRelevance(recipe: SavedRecipe): number {
   const month = new Date().getMonth();
   const seasonalIngredients = getSeasonalIngredients(month);
   
-  const recipeIngredients = recipe.protocol.ingredients.map(i => i.name.toLowerCase());
-  const matches = recipeIngredients.filter(i => 
-    seasonalIngredients.some(s => i.includes(s))
+  const recipeIngredients = (recipe.protocol.ingredients || []).map((i: Ingredient) => i.name.toLowerCase());
+  const matches = recipeIngredients.filter((i: string) => 
+    seasonalIngredients.some((s: string) => i.includes(s))
   );
   
   return Math.min(matches.length / Math.max(recipeIngredients.length * 0.3, 1), 1);
@@ -235,12 +235,12 @@ export const analyzeSkillProgression = (cookingHistory: SavedRecipe[]): SkillMet
 
   for (const recipe of cookingHistory) {
     // Extract techniques
-    recipe.protocol.instructions.forEach(step => {
+    recipe.protocol.instructions.forEach((step: ProtocolStep) => {
       if (step.technique) techniques.add(step.technique);
     });
 
     // Track cuisine expertise
-    const cuisine = recipe.protocol.cuisineStyle;
+    const cuisine = recipe.protocol.cuisineStyle || 'general';
     cuisineScores[cuisine] = (cuisineScores[cuisine] || 0) + 1;
 
     // Track difficulty progression
@@ -250,7 +250,7 @@ export const analyzeSkillProgression = (cookingHistory: SavedRecipe[]): SkillMet
       'hard': 0.75,
       'expert': 1.0
     };
-    difficultyScores.push(diffMap[recipe.protocol.difficulty] || 0.5);
+    difficultyScores.push(diffMap[recipe.protocol.difficulty || 'medium'] || 0.5);
   }
 
   // Calculate overall skill level
@@ -336,7 +336,7 @@ export const optimizeMealPlan = async (
         day: days[dayIndex % days.length],
         meal: mealIndex === 0 ? 'Lunch' : 'Dinner',
         recipeId: recipe.id,
-        recipeName: recipe.protocol.name,
+        recipeName: recipe.protocol.name || recipe.protocol.title,
         nutritionalScore: selected.factors.nutritionalBalance
       });
     }
@@ -365,7 +365,7 @@ function calculateIngredientEfficiency(
   for (const planItem of plan) {
     const recipe = recipes.find(r => r.id === planItem.recipeId);
     if (recipe) {
-      recipe.protocol.ingredients.forEach(ing => 
+      (recipe.protocol.ingredients || []).forEach((ing: Ingredient) => 
         requiredIngredients.add(ing.name.toLowerCase())
       );
     }
@@ -421,7 +421,7 @@ export const analyzePantryHealth = async (
   // Calculate utilization rate
   const usedIngredients = new Set<string>();
   cookingHistory.forEach(recipe => {
-    recipe.protocol.ingredients.forEach(ing => 
+    (recipe.protocol.ingredients || []).forEach((ing: Ingredient) => 
       usedIngredients.add(ing.name.toLowerCase())
     );
   });
@@ -440,7 +440,7 @@ export const analyzePantryHealth = async (
   // Find underutilized items
   const ingredientFrequency: Record<string, number> = {};
   cookingHistory.forEach(recipe => {
-    recipe.protocol.ingredients.forEach(ing => {
+    (recipe.protocol.ingredients || []).forEach((ing: Ingredient) => {
       const name = ing.name.toLowerCase();
       ingredientFrequency[name] = (ingredientFrequency[name] || 0) + 1;
     });

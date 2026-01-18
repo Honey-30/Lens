@@ -56,7 +56,7 @@ export const generateDishImage = async (
     const prompt = `Professional food photography of ${protocol.title}. 
     
 Dish description: ${protocol.description}
-Key ingredients: ${protocol.ingredients_used.join(', ')}
+Key ingredients: ${(protocol.ingredients_used || []).join(', ')}
 
 Style: ${stylePrompts[style]}
 

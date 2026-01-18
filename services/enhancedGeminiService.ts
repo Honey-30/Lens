@@ -126,7 +126,7 @@ export const synthesizeProtocolEnhanced = async (
       logger.info('[Enhanced] Protocol synthesized successfully', {
         complexity: protocol.complexity,
         duration: protocol.duration_minutes,
-        ingredients: protocol.ingredients_used.length
+        ingredients: protocol.ingredients_used?.length || 0,
       });
 
       return protocol;

@@ -120,7 +120,7 @@ const Analyzer: React.FC<AnalyzerProps> = ({ onComplete }) => {
                 {isOnline 
                   ? 'Multi-stage cloud-accelerated perception pipeline for maximum precision.'
                   : `Powered by ${registry.getStats().totalModels} local edge models for offline intelligence.`}
-              </p>
+              </motion.p>
             </div>
 
             {error && (

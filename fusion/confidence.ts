@@ -33,8 +33,8 @@ export const calculateCompositeConfidence = (
 
   // 3. Constraint Satisfaction (No hallucinations)
   const mlNames = new Set(mlInventory.map(i => i.name.toLowerCase()));
-  const hallucinations = protocol.ingredients_used.filter(ing => !mlNames.has(ing.toLowerCase())).length;
-  const constraintSatisfaction = Math.max(0, 1 - (hallucinations / protocol.ingredients_used.length));
+  const hallucinations = (protocol.ingredients_used || []).filter(ing => !mlNames.has(ing.toLowerCase())).length;
+  const constraintSatisfaction = Math.max(0, 1 - (hallucinations / Math.max((protocol.ingredients_used?.length || 1), 1)));
 
   const composite = (0.5 * mlConfidence) + (0.3 * geminiCoherence) + (0.2 * constraintSatisfaction);
   

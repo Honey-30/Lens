@@ -3,11 +3,26 @@
  * Elite neural network-inspired recipe synthesis without API dependency
  */
 
-import { Ingredient, NeuralProtocol, UserPreferences, Instruction } from '../types';
+import { Ingredient, NeuralProtocol, UserPreferences } from '../types';
 import { NUTRIENT_DENSITY, MOLECULAR_AFFINITY_MAP, SUBSTITUTION_TABLE, RECIPE_BLUEPRINTS } from './offlineService';
 
+interface RecipeInstruction {
+  technique: string;
+  instruction: string;
+  timer_seconds: number;
+}
+
+interface RecipeTemplate {
+  id: string;
+  name: string;
+  description: string;
+  difficulty: string;
+  cuisineStyles: string[];
+  instructions: RecipeInstruction[];
+}
+
 // ==================== ADVANCED RECIPE TEMPLATES ====================
-const ELITE_RECIPE_TEMPLATES = [
+const ELITE_RECIPE_TEMPLATES: RecipeTemplate[] = [
   {
     id: 'michelin_molecular',
     name: 'Molecular {primary} with {secondary} Essence',
@@ -112,7 +127,7 @@ export const generateAdvancedOfflineRecipe = (
   // Select template based on cuisine preference and difficulty
   const templates = ELITE_RECIPE_TEMPLATES.filter(t => 
     !preferences.cuisinePreference || 
-    t.cuisineStyles.some(s => s.toLowerCase().includes(preferences.cuisinePreference.toLowerCase()))
+    t.cuisineStyles.some(s => s.toLowerCase().includes(preferences.cuisinePreference?.toLowerCase() || ''))
   );
   
   const template = templates[Math.floor(Math.random() * templates.length)] || ELITE_RECIPE_TEMPLATES[0];
@@ -132,11 +147,12 @@ export const generateAdvancedOfflineRecipe = (
     .replace(/{secondary}/g, secondary.name);
   
   // Process instructions
-  const instructions: Instruction[] = template.instructions.map(inst => ({
-    technique: inst.technique,
+  const instructions = template.instructions.map((inst, index) => ({
+    order: index + 1,
     instruction: inst.instruction
       .replace(/{primary}/g, primary.name)
       .replace(/{secondary}/g, secondary.name),
+    technique: inst.technique,
     timer_seconds: inst.timer_seconds
   }));
   
@@ -152,7 +168,8 @@ export const generateAdvancedOfflineRecipe = (
   // Apply dietary restrictions
   const adjustedInstructions = applyDietaryRestrictions(instructions, preferences.dietary);
   
-  return {
+  const protocol: NeuralProtocol = {
+    title: name,
     name,
     description,
     instructions: adjustedInstructions,
@@ -163,10 +180,14 @@ export const generateAdvancedOfflineRecipe = (
     cuisineStyle,
     drinkPairing,
     isOffline: true,
-    visualUrl: '',
-    drinkVisualUrl: '',
-    schematicUrl: ''
+    complexity: template.difficulty === 'easy' ? 'Low' : template.difficulty === 'medium' ? 'Medium' : 'High',
+    duration_minutes: Math.round(template.instructions.reduce((sum, inst) => sum + inst.timer_seconds, 0) / 60),
+    timing: {
+      total: Math.round(template.instructions.reduce((sum, inst) => sum + inst.timer_seconds, 0) / 60)
+    }
   };
+  
+  return protocol;
 };
 
 function calculateNutrition(ingredients: Ingredient[]) {
@@ -192,11 +213,12 @@ function calculateNutrition(ingredients: Ingredient[]) {
     protein: Math.round(totalProtein),
     carbs: Math.round(totalCarbs),
     fat: Math.round(totalFat),
+    fats: Math.round(totalFat),
     fiber: Math.round(totalFiber)
   };
 }
 
-function applyDietaryRestrictions(instructions: Instruction[], dietary: string): Instruction[] {
+function applyDietaryRestrictions(instructions: any[], dietary: string): any[] {
   if (dietary === 'Vegan' || dietary === 'Vegetarian') {
     return instructions.map(inst => ({
       ...inst,
