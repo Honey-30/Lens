@@ -1,0 +1,10 @@
+
+{
+  "name": "CulinaryLens",
+  "description": "A Cognitive Culinary Intelligence System designed for modern gastronomy, bridging raw inventory and high-fidelity execution using Gemini Multimodal AI.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
