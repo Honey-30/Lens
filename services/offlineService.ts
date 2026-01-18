@@ -5,7 +5,7 @@ import { registry } from './modelRegistry';
 /**
  * High-Density Nutritional Constants
  */
-const NUTRIENT_DENSITY: Record<string, { cal: number; protein: number; carbs: number; fat: number }> = {
+export const NUTRIENT_DENSITY: Record<string, { cal: number; protein: number; carbs: number; fat: number }> = {
   'fruit': { cal: 50, protein: 0.5, carbs: 12, fat: 0.2 },
   'vegetable': { cal: 25, protein: 1.5, carbs: 5, fat: 0.1 },
   'protein': { cal: 220, protein: 22, carbs: 0, fat: 14 },
@@ -18,7 +18,7 @@ const NUTRIENT_DENSITY: Record<string, { cal: number; protein: number; carbs: nu
 /**
  * Molecular Affinity Matrix (Simulated Knowledge Graph)
  */
-const MOLECULAR_AFFINITY_MAP: Record<string, string[]> = {
+export const MOLECULAR_AFFINITY_MAP: Record<string, string[]> = {
   'apple': ['cinnamon', 'pork', 'cheese', 'walnut', 'maple', 'vanilla'],
   'pear': ['blue cheese', 'chocolate', 'red wine', 'honey', 'rosemary'],
   'spinach': ['nutmeg', 'garlic', 'lemon', 'egg', 'heavy cream', 'pine nut'],
@@ -34,7 +34,7 @@ const MOLECULAR_AFFINITY_MAP: Record<string, string[]> = {
 /**
  * Intelligent Substitution Engine (Offline)
  */
-const SUBSTITUTION_TABLE: Record<string, string[]> = {
+export const SUBSTITUTION_TABLE: Record<string, string[]> = {
   'butter': ['olive oil', 'ghee', 'coconut oil'],
   'milk': ['soy milk', 'oat milk', 'cream'],
   'lemon': ['lime', 'vinegar', 'verjuice'],
@@ -47,7 +47,7 @@ const SUBSTITUTION_TABLE: Record<string, string[]> = {
 /**
  * Procedural Recipe Blueprints
  */
-const RECIPE_BLUEPRINTS = [
+export const RECIPE_BLUEPRINTS = [
   {
     title: "Sovereign {primary} Composition",
     description: "An architectural exploration of {primary} textures, harmonized with {secondary} using local Edge Model {modelVersion}.",

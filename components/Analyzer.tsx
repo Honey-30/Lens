@@ -4,7 +4,7 @@ import { refineManifestWithEnsemble, auditRecall, checkOnlineStatus } from '../s
 import { run_perception_pipeline, run_targeted_rescan } from '../perception/pipeline';
 import { Ingredient, AnalysisStep } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, ShieldCheck, Cpu, Search, Sparkles, Database, Layers, AlertTriangle, ZapOff } from 'lucide-react';
+import { Camera, ShieldCheck, Cpu, Search, Sparkles, Database, Layers, AlertTriangle, ZapOff, Upload, CheckCircle2 } from 'lucide-react';
 import { registry } from '../services/modelRegistry';
 
 interface AnalyzerProps {
@@ -83,77 +83,156 @@ const Analyzer: React.FC<AnalyzerProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-16 px-10 flex flex-col items-center justify-center bg-transparent">
+    <div className="min-h-screen pt-36 pb-20 px-8 md:px-16 flex flex-col items-center justify-center bg-gradient-to-br from-neutral-0 via-neutral-25 to-neutral-50">
       <AnimatePresence mode="wait">
         {!isAnalyzing ? (
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="max-w-4xl w-full flex flex-col items-center">
-            <div className="text-center mb-16">
-              <div className="flex items-center justify-center gap-3 mb-6 opacity-40">
-                {isOnline ? <ShieldCheck size={10} className="text-[#D4AF37]" /> : <ZapOff size={10} className="text-[#C5A028]" />}
-                <span className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#1A1A1D]">
-                  {isOnline ? 'Neural Handshake Cycle' : 'Edge Mode Active'}
-                </span>
-              </div>
-              <h2 className="text-6xl md:text-7xl font-bold tracking-tighter mb-6 text-[#1A1A1D] leading-none">
-                Initial <span className="serif italic text-[#D4AF37] font-normal">Perception</span>
-              </h2>
-              <p className="text-[#1A1A1D]/40 text-lg font-light max-w-xl mx-auto leading-relaxed">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="max-w-5xl w-full flex flex-col items-center">
+            <div className="text-center mb-20">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="flex items-center justify-center gap-3 mb-10"
+              >
+                <div className="px-4 py-2 bg-white/70 backdrop-blur-xl rounded-full border border-neutral-200/50 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    {isOnline ? <ShieldCheck size={11} className="text-primary-600" strokeWidth={2.5} /> : <ZapOff size={11} className="text-neutral-600" strokeWidth={2.5} />}
+                    <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-neutral-700">
+                      {isOnline ? 'Neural Network Online' : 'Offline Edge Processing'}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.h2 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.03em] mb-8 text-neutral-950 leading-[0.92] antialiased"
+              >
+                Visual <span className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-800 bg-clip-text text-transparent font-serif italic font-normal">Analysis</span>
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.5 }}
+                className="text-neutral-600 text-lg md:text-xl font-light max-w-2xl mx-auto leading-[1.6] tracking-[-0.01em]"
+              >
                 {isOnline 
-                  ? 'A multi-stage cloud-accelerated inference cycle for peak fidelity.'
-                  : `Operating offline using ${registry.getStats().totalModels} local edge models.`}
+                  ? 'Multi-stage cloud-accelerated perception pipeline for maximum precision.'
+                  : `Powered by ${registry.getStats().totalModels} local edge models for offline intelligence.`}
               </p>
             </div>
 
             {error && (
-              <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="mb-10 p-6 bg-rose-50 border border-rose-100 rounded-[2rem] flex items-center gap-5 text-rose-800 shadow-sm">
-                <AlertTriangle size={18} className="text-rose-500" />
-                <div className="text-[10px] font-bold uppercase tracking-widest">{error}</div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.96 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                transition={{ duration: 0.4 }}
+                className="mb-12 p-6 md:p-7 bg-gradient-to-br from-red-50 to-rose-50 border border-red-200/60 rounded-[2.5rem] flex items-center gap-5 text-red-800 shadow-lg"
+              >
+                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                  <AlertTriangle size={18} className="text-red-600" strokeWidth={2.5} />
+                </div>
+                <div className="text-xs font-semibold uppercase tracking-[0.08em]">{error}</div>
               </motion.div>
             )}
 
-            <motion.div onClick={() => fileInputRef.current?.click()} whileHover={{ scale: 1.002, y: -2 }} className="relative aspect-video w-full max-w-2xl rounded-[3rem] glass-premium flex flex-col items-center justify-center shadow-xl border-black/[0.01] cursor-pointer group">
-              <div className="w-16 h-16 rounded-[1.5rem] bg-[#0A0A0B] flex items-center justify-center mb-4 shadow-xl transition-transform duration-700 group-hover:scale-110">
-                <Camera color="#D4AF37" size={24} strokeWidth={1.5} />
+            <motion.div 
+              onClick={() => fileInputRef.current?.click()} 
+              whileHover={{ scale: 1.008, y: -6 }} 
+              whileTap={{ scale: 0.995 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="relative aspect-video w-full max-w-3xl rounded-[3.5rem] bg-white/60 backdrop-blur-2xl flex flex-col items-center justify-center shadow-[0_32px_96px_-12px_rgba(0,0,0,0.15)] border border-neutral-200/40 cursor-pointer group overflow-hidden"
+            >
+              {/* Ambient hover glow */}
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-primary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              />
+              
+              <motion.div 
+                className="w-20 h-20 rounded-[1.75rem] bg-gradient-to-br from-neutral-900 to-neutral-950 flex items-center justify-center mb-6 shadow-2xl relative z-10"
+                whileHover={{ scale: 1.15, rotate: 5 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+              >
+                <Camera color="#D4AF37" size={28} strokeWidth={2} />
+              </motion.div>
+              
+              <div className="relative z-10 space-y-3">
+                <span className="text-xs uppercase tracking-[0.15em] font-bold text-neutral-800 block">Upload Image</span>
+                <span className="text-[10px] uppercase tracking-[0.12em] font-medium text-neutral-400 block">Click or drag to begin analysis</span>
               </div>
-              <span className="text-[9px] uppercase tracking-[0.4em] font-bold text-black/30">Initiate Optical Gateway</span>
+              
               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
             </motion.div>
           </motion.div>
         ) : (
-          <motion.div key="analyzing" className="fixed inset-0 z-[200] flex items-center justify-center bg-white/95 backdrop-blur-3xl px-8">
-            <motion.div initial={{ scale: 0.99, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-[650px] bg-white rounded-[3rem] shadow-2xl border border-black/[0.02] overflow-hidden mac-window">
-              <div className="p-16">
-                <div className="flex justify-between items-end mb-10">
+          <motion.div key="analyzing" className="fixed inset-0 z-[200] flex items-center justify-center bg-gradient-to-br from-neutral-0 via-neutral-25 to-neutral-50 backdrop-blur-3xl px-8">
+            <motion.div 
+              initial={{ scale: 0.96, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full max-w-3xl bg-white/70 backdrop-blur-3xl rounded-[4rem] shadow-[0_32px_96px_-12px_rgba(0,0,0,0.18)] border border-neutral-200/40 overflow-hidden"
+            >
+              <div className="p-12 md:p-16">
+                <div className="flex justify-between items-end mb-12">
                    <div>
-                      <h4 className="text-2xl font-bold tracking-tighter mb-1 italic serif">
-                        {isOnline ? 'System Processing' : 'Edge Computing'}
+                      <h4 className="text-3xl md:text-4xl font-black tracking-[-0.02em] mb-2 text-neutral-950">
+                        {isOnline ? 'Processing' : 'Edge Computing'}
                       </h4>
-                      <p className="text-[8px] uppercase tracking-[0.2em] font-bold text-black/20">{statusText}</p>
+                      <p className="text-xs uppercase tracking-[0.12em] font-semibold text-neutral-500">{statusText}</p>
                    </div>
-                   <span className="mono text-[10px] font-bold text-[#D4AF37]">{progress}%</span>
+                   <div className="px-5 py-2.5 bg-neutral-950 rounded-full">
+                     <span className="mono text-sm font-bold text-primary-400">{progress}%</span>
+                   </div>
                 </div>
 
-                <div className="w-full h-[1px] bg-black/[0.02] rounded-full overflow-hidden mb-12">
-                  <motion.div className="h-full bg-black" initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.8 }} />
+                {/* Premium Progress Bar */}
+                <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden mb-16 shadow-inner">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 relative overflow-hidden"
+                    initial={{ width: 0 }} 
+                    animate={{ width: `${progress}%` }} 
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                  </motion.div>
                 </div>
 
-                <div className="grid grid-cols-5 gap-3">
+                {/* Premium Steps Grid */}
+                <div className="grid grid-cols-5 gap-4">
                    {steps.map((step) => (
-                     <div key={step.id} className="relative flex flex-col items-center text-center">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-all duration-700 ${
-                          step.status === 'complete' ? 'bg-[#D4AF37] text-white' : 
-                          step.status === 'active' ? 'bg-black text-white shadow-lg scale-110' : 'bg-black/[0.02] text-black/10'
+                     <motion.div 
+                       key={step.id} 
+                       className="relative flex flex-col items-center text-center"
+                       initial={{ opacity: 0, y: 10 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ delay: 0.1 * steps.indexOf(step) }}
+                     >
+                        <motion.div 
+                          className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-all duration-700 ${
+                            step.status === 'complete' ? 'bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30' : 
+                            step.status === 'active' ? 'bg-gradient-to-br from-neutral-900 to-neutral-950 text-white shadow-2xl scale-110 ring-4 ring-primary-500/20' : 'bg-neutral-100 text-neutral-300'
+                          }`}
+                          animate={step.status === 'active' ? { scale: [1.1, 1.15, 1.1] } : {}}
+                          transition={{ duration: 2, repeat: step.status === 'active' ? Infinity : 0 }}
+                        >
+                           {step.id === 'detect' && <Cpu size={18} strokeWidth={2.5} />}
+                           {step.id === 'segment' && <Layers size={18} strokeWidth={2.5} />}
+                           {step.id === 'audit' && <Search size={18} strokeWidth={2.5} />}
+                           {step.id === 'rescan' && <Sparkles size={18} strokeWidth={2.5} />}
+                           {step.id === 'fuse' && <Database size={18} strokeWidth={2.5} />}
+                        </motion.div>
+                        <span className={`text-[9px] uppercase tracking-[0.12em] font-bold leading-tight transition-all duration-700 ${
+                          step.status === 'active' ? 'opacity-100 text-neutral-900' : 
+                          step.status === 'complete' ? 'opacity-60 text-neutral-600' : 'opacity-25 text-neutral-400'
                         }`}>
-                           {step.id === 'detect' && <Cpu size={14} />}
-                           {step.id === 'segment' && <Layers size={14} />}
-                           {step.id === 'audit' && <Search size={14} />}
-                           {step.id === 'rescan' && <Sparkles size={14} />}
-                           {step.id === 'fuse' && <Database size={14} />}
-                        </div>
-                        <span className={`text-[7px] uppercase tracking-[0.15em] font-bold leading-tight transition-opacity duration-700 ${step.status === 'active' ? 'opacity-100' : 'opacity-20'}`}>
                            {step.label}
                         </span>
-                     </div>
+                     </motion.div>
                    ))}
                 </div>
               </div>

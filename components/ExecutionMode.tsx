@@ -7,7 +7,7 @@ import {
   ChevronLeft, ChevronRight, Volume2, Camera, X, Trophy, Activity, 
   CheckCircle2, Zap, Timer, ArrowRight, ThumbsUp, ThumbsDown, 
   Minus, MessageSquare, Send, Loader2, Sparkles, AlertCircle, 
-  Play, Pause, RotateCcw, Target
+  Play, Pause, RotateCcw, Target, ChefHat, Clock, Flame, Award
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -187,28 +187,131 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
 
   if (isFinished) {
     return (
-      <div className="fixed inset-0 bg-white z-[300] overflow-y-auto pt-32 pb-24 px-12">
-        <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }} className="max-w-6xl mx-auto text-center space-y-12">
-           <div className="flex flex-col items-center gap-6">
-              <div className="w-24 h-24 bg-[#0A0A0B] rounded-[2.5rem] flex items-center justify-center text-white shadow-2xl">
-                 <Trophy size={40} className="text-[#C5A028]" />
+      <div className="fixed inset-0 bg-gradient-to-br from-neutral-50 via-white to-primary-50/30 z-[300] overflow-y-auto pt-32 pb-24 px-12">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+          animate={{ opacity: 1, scale: 1, y: 0 }} 
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-6xl mx-auto text-center space-y-16"
+        >
+           {/* Completion Header */}
+           <div className="flex flex-col items-center gap-8">
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="relative"
+              >
+                <div className="w-32 h-32 bg-gradient-to-br from-primary-500 to-primary-600 rounded-[3rem] flex items-center justify-center shadow-2xl">
+                  <Trophy size={56} className="text-white" strokeWidth={2.5} />
+                </div>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="absolute -top-3 -right-3 w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-xl"
+                >
+                  <CheckCircle2 size={32} className="text-white" strokeWidth={3} />
+                </motion.div>
+              </motion.div>
+              
+              <div className="space-y-4">
+                <motion.h2 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-8xl font-black tracking-tight text-neutral-900"
+                >
+                  Culinary Masterpiece <span className="text-primary-600">Complete</span>
+                </motion.h2>
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-lg font-bold uppercase tracking-wider text-neutral-500"
+                >
+                  {protocol.name} · {protocol.cuisineStyle}
+                </motion.p>
               </div>
-              <h2 className="text-7xl font-bold tracking-tighter text-[#0A0A0B]">Study <span className="serif italic text-[#C5A028] font-normal">Finalized</span></h2>
-              <p className="text-[12px] uppercase tracking-[0.5em] font-bold text-black/20">Culinary Intelligence Sequence Complete</p>
            </div>
            
-           <div className="flex justify-center gap-8">
-              <button onClick={onComplete} className="px-16 py-6 bg-[#0A0A0B] text-white rounded-full font-bold text-[11px] uppercase tracking-[0.4em] shadow-lg hover:bg-[#C5A028] transition-all">Archive Protocol</button>
-           </div>
+           {/* Achievement Stats */}
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.5 }}
+             className="grid grid-cols-1 md:grid-cols-4 gap-6"
+           >
+             <div className="p-8 bg-white/80 backdrop-blur-xl rounded-3xl border border-neutral-200/60 shadow-xl">
+               <div className="flex items-center justify-center mb-4">
+                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+                   <CheckCircle2 size={28} className="text-white" strokeWidth={2.5} />
+                 </div>
+               </div>
+               <div className="text-5xl font-black text-neutral-900 mb-2">{protocol.instructions.length}</div>
+               <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Steps Completed</div>
+             </div>
+
+             <div className="p-8 bg-white/80 backdrop-blur-xl rounded-3xl border border-neutral-200/60 shadow-xl">
+               <div className="flex items-center justify-center mb-4">
+                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center">
+                   <ChefHat size={28} className="text-white" strokeWidth={2.5} />
+                 </div>
+               </div>
+               <div className="text-5xl font-black text-neutral-900 mb-2 capitalize">{protocol.difficulty}</div>
+               <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Difficulty Level</div>
+             </div>
+
+             <div className="p-8 bg-white/80 backdrop-blur-xl rounded-3xl border border-neutral-200/60 shadow-xl">
+               <div className="flex items-center justify-center mb-4">
+                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+                   <Clock size={28} className="text-white" strokeWidth={2.5} />
+                 </div>
+               </div>
+               <div className="text-5xl font-black text-neutral-900 mb-2">
+                 {Math.round(protocol.instructions.reduce((acc, s) => acc + (s.timer_seconds || 0), 0) / 60)}
+               </div>
+               <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Minutes Invested</div>
+             </div>
+
+             <div className="p-8 bg-white/80 backdrop-blur-xl rounded-3xl border border-neutral-200/60 shadow-xl">
+               <div className="flex items-center justify-center mb-4">
+                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center">
+                   <Flame size={28} className="text-white" strokeWidth={2.5} />
+                 </div>
+               </div>
+               <div className="text-5xl font-black text-neutral-900 mb-2">
+                 {protocol.nutritionalProfile?.calories || 'N/A'}
+               </div>
+               <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Calories Created</div>
+             </div>
+           </motion.div>
+           
+           {/* Action Buttons */}
+           <motion.div
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ delay: 0.6 }}
+             className="flex justify-center gap-6"
+           >
+              <button 
+                onClick={onComplete} 
+                className="px-20 py-6 bg-gradient-to-r from-neutral-900 to-neutral-800 text-white rounded-full font-black text-sm uppercase tracking-wider shadow-2xl hover:from-primary-600 hover:to-primary-500 transition-all duration-300 flex items-center gap-4"
+              >
+                <Award size={20} strokeWidth={2.5} />
+                Complete & Save
+              </button>
+           </motion.div>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-white z-[200] flex flex-col items-center justify-center overflow-hidden font-sans">
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none grayscale">
-        <img src={protocol.visualUrl} className="w-full h-full object-cover" />
+    <div className="fixed inset-0 bg-gradient-to-br from-neutral-50 via-white to-primary-50/20 z-[200] flex flex-col items-center justify-center overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.1)_0%,transparent_70%)]" />
       </div>
 
       <AnimatePresence>
@@ -254,64 +357,208 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
         )}
       </AnimatePresence>
 
-      <div className={`relative z-10 w-full max-w-6xl px-8 flex flex-col items-center gap-12 text-center transition-all duration-500 ${containerPadding}`}>
-         <div className="flex items-center gap-4 opacity-10">
+      <div className={`relative z-10 w-full max-w-6xl px-12 flex flex-col items-center gap-16 text-center transition-all duration-500 ${containerPadding}`}>
+         {/* Progress Dots - Enhanced */}
+         <div className="flex items-center gap-3">
             {protocol.instructions.map((_, i) => (
-              <div key={i} className={`h-1 rounded-full transition-all duration-1000 ${i === currentStepIndex ? 'w-12 bg-black' : 'w-4 bg-black'}`} />
+              <motion.div 
+                key={i} 
+                initial={{ scale: 0.8 }}
+                animate={{ scale: i === currentStepIndex ? 1.2 : 1 }}
+                className={`h-2 rounded-full transition-all duration-700 ${
+                  i === currentStepIndex 
+                    ? 'w-16 bg-gradient-to-r from-primary-500 to-primary-600 shadow-lg' 
+                    : i < currentStepIndex
+                    ? 'w-6 bg-emerald-500'
+                    : 'w-6 bg-neutral-200'
+                }`} 
+              />
             ))}
          </div>
 
          <AnimatePresence mode="wait">
            <motion.div 
              key={currentStepIndex} 
-             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} 
-             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} 
-             className="w-full min-h-[350px] flex flex-col items-center justify-center gap-8"
+             initial={{ opacity: 0, y: 20 }} 
+             animate={{ opacity: 1, y: 0 }} 
+             exit={{ opacity: 0, y: -20 }} 
+             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} 
+             className="w-full min-h-[400px] flex flex-col items-center justify-center gap-10"
            >
-              <div className="space-y-6">
-                 <div className="flex items-center justify-center gap-4">
-                    <Target size={14} className="text-[#C5A028] opacity-60" />
-                    <span className="text-[11px] uppercase tracking-[0.5em] font-bold text-[#C5A028]">Phase {currentStepIndex + 1} // {currentStep.technique}</span>
+              <div className="space-y-8">
+                 {/* Step Header */}
+                 <div className="flex items-center justify-center gap-5 mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
+                      <Target size={24} className="text-white" strokeWidth={2.5} />
+                    </div>
+                    <div className="text-left">
+                      <span className="text-sm font-black uppercase tracking-wider text-primary-600">
+                        Step {currentStepIndex + 1} of {protocol.instructions.length}
+                      </span>
+                      <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                        {currentStep.technique}
+                      </div>
+                    </div>
                  </div>
-                 <h2 className={`${instructionFontSize} font-bold tracking-tighter leading-[1.05] text-[#0A0A0B] serif italic transition-all duration-500 max-w-4xl mx-auto`}>
+                 
+                 {/* Main Instruction - Premium Typography */}
+                 <h2 className={`${instructionFontSize} font-black tracking-tight leading-[1.1] text-neutral-900 transition-all duration-500 max-w-4xl mx-auto px-8`}>
                     {currentStep.instruction}
                  </h2>
+                 
+                 {/* Verification Result */}
                  {verificationResult && (
-                   <div className={`mt-10 inline-flex items-center gap-4 px-8 py-4 rounded-[2rem] border text-[11px] font-bold uppercase tracking-[0.4em] ${verificationResult.success ? 'bg-emerald-50/50 border-emerald-100 text-emerald-700/70' : 'bg-amber-50/50 border-amber-100 text-amber-700/70'}`}>
-                      {verificationResult.success ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+                   <motion.div 
+                     initial={{ opacity: 0, scale: 0.95 }}
+                     animate={{ opacity: 1, scale: 1 }}
+                     className={`mt-8 inline-flex items-center gap-4 px-8 py-5 rounded-3xl text-sm font-bold uppercase tracking-wider shadow-lg ${
+                       verificationResult.success 
+                         ? 'bg-emerald-50 border-2 border-emerald-200 text-emerald-700' 
+                         : 'bg-amber-50 border-2 border-amber-200 text-amber-700'
+                     }`}
+                   >
+                      {verificationResult.success ? <CheckCircle2 size={20} strokeWidth={2.5} /> : <AlertCircle size={20} strokeWidth={2.5} />}
                       {verificationResult.feedback}
-                   </div>
+                   </motion.div>
                  )}
               </div>
 
+              {/* Premium Timer */}
               {currentStep.timer_seconds && timeLeft > 0 && (
-                <div className="flex flex-col items-center gap-6 pt-6">
-                   <div className="relative w-28 h-28">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-col items-center gap-8 pt-8"
+                >
+                   <div className="relative w-40 h-40">
                       <svg className="w-full h-full -rotate-90">
-                         <circle cx="56" cy="56" r="50" stroke="rgba(0,0,0,0.04)" strokeWidth="4" fill="transparent" />
+                         <circle cx="80" cy="80" r="72" stroke="rgba(212,175,55,0.1)" strokeWidth="8" fill="transparent" />
                          <motion.circle 
-                            cx="56" cy="56" r="50" stroke="#C5A028" strokeWidth="4" fill="transparent"
-                            strokeDasharray="314" animate={{ strokeDashoffset: 314 - (314 * (timeLeft / currentStep.timer_seconds)) }}
+                            cx="80" cy="80" r="72" 
+                            stroke="url(#gradient)" 
+                            strokeWidth="8" 
+                            fill="transparent"
+                            strokeDasharray="452" 
+                            strokeLinecap="round"
+                            animate={{ strokeDashoffset: 452 - (452 * (timeLeft / currentStep.timer_seconds)) }}
+                            transition={{ duration: 0.5 }}
                          />
+                         <defs>
+                           <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                             <stop offset="0%" stopColor="#d4af37" />
+                             <stop offset="100%" stopColor="#c19a2f" />
+                           </linearGradient>
+                         </defs>
                       </svg>
-                      <div className="absolute inset-0 flex items-center justify-center font-mono text-xl font-bold text-black/80">{formatTime(timeLeft)}</div>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <Timer size={24} className="text-primary-600 mb-2" strokeWidth={2.5} />
+                        <div className="font-mono text-3xl font-black text-neutral-900">{formatTime(timeLeft)}</div>
+                      </div>
                    </div>
-                   <div className="flex gap-4">
-                      <button onClick={() => setIsTimerRunning(!isTimerRunning)} className="p-3.5 rounded-full bg-black text-white shadow-md hover:scale-110 transition-transform">{isTimerRunning ? <Pause size={14} /> : <Play size={14} />}</button>
-                      <button onClick={() => { setTimeLeft(currentStep.timer_seconds || 0); setIsTimerRunning(false); }} className="p-3.5 rounded-full bg-black/[0.04] text-black/40 hover:bg-black/[0.08] transition-all"><RotateCcw size={14} /></button>
+                   <div className="flex gap-5">
+                      <button 
+                        onClick={() => setIsTimerRunning(!isTimerRunning)} 
+                        className="px-6 py-4 rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 text-white shadow-xl hover:from-primary-600 hover:to-primary-500 transition-all duration-300 flex items-center gap-3 font-bold"
+                      >
+                        {isTimerRunning ? <><Pause size={18} strokeWidth={2.5} /> Pause</> : <><Play size={18} strokeWidth={2.5} /> Start</>}
+                      </button>
+                      <button 
+                        onClick={() => { setTimeLeft(currentStep.timer_seconds || 0); setIsTimerRunning(false); }} 
+                        className="px-6 py-4 rounded-2xl bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-700 hover:border-neutral-300 hover:bg-white transition-all shadow-lg flex items-center gap-3 font-bold"
+                      >
+                        <RotateCcw size={18} strokeWidth={2.5} /> Reset
+                      </button>
                    </div>
                 </div>
               )}
            </motion.div>
          </AnimatePresence>
          
-         <div className="flex items-center justify-center gap-10 md:gap-14 pt-8">
-            <button onClick={() => setIsChatOpen(!isChatOpen)} className={`w-20 h-20 rounded-[2.5rem] border border-black/[0.05] flex items-center justify-center transition-all ${isChatOpen ? 'bg-[#0A0A0B] text-white shadow-2xl' : 'bg-white hover:border-black/20 shadow-sm'}`}><MessageSquare size={28} /></button>
-            <button disabled={currentStepIndex === 0} onClick={handlePrev} className={`w-20 h-20 rounded-[2.5rem] border border-black/[0.05] flex items-center justify-center transition-all ${currentStepIndex === 0 ? 'opacity-5' : 'bg-white hover:border-black/20 shadow-sm'}`}><ChevronLeft size={28} /></button>
-            <button onClick={() => playVoice(currentStep.instruction)} className={`w-40 h-40 md:w-48 md:h-48 rounded-[4rem] bg-[#0A0A0B] flex items-center justify-center shadow-3xl transition-all hover:scale-105 active:scale-95 ${isPlaying ? 'ring-[12px] ring-[#C5A028]/15' : ''}`}><Volume2 color={isPlaying ? "#C5A028" : "white"} size={64} strokeWidth={1.2} /></button>
-            <button onClick={handleNext} className="w-20 h-20 rounded-[2.5rem] bg-[#C5A028] text-white flex items-center justify-center shadow-2xl hover:bg-[#0A0A0B] transition-all">{currentStepIndex === protocol.instructions.length - 1 ? <Trophy size={28} /> : <ArrowRight size={28} />}</button>
-            <button onClick={initiateVerification} disabled={isVerifying} className={`w-20 h-20 rounded-[2.5rem] border border-black/[0.05] flex items-center justify-center transition-all ${isVerifying ? 'animate-pulse bg-[#C5A028]/5' : 'bg-white hover:border-black/20 shadow-sm'}`}>{isVerifying ? <Loader2 size={28} className="animate-spin text-[#C5A028]" /> : <Camera size={28} />}</button>
-         </div>
+         {/* Premium Control Panel */}
+         <motion.div 
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.3 }}
+           className="flex items-center justify-center gap-8 md:gap-12 pt-12"
+         >
+            {/* Assistant Button */}
+            <motion.button 
+              onClick={() => setIsChatOpen(!isChatOpen)} 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all shadow-xl ${
+                isChatOpen 
+                  ? 'bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-2xl' 
+                  : 'bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-700 hover:border-primary-500/40'
+              }`}
+            >
+              <MessageSquare size={28} strokeWidth={2.5} />
+            </motion.button>
+            
+            {/* Previous Button */}
+            <motion.button 
+              disabled={currentStepIndex === 0} 
+              onClick={handlePrev} 
+              whileHover={{ scale: currentStepIndex === 0 ? 1 : 1.05 }}
+              whileTap={{ scale: currentStepIndex === 0 ? 1 : 0.95 }}
+              className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all ${
+                currentStepIndex === 0 
+                  ? 'opacity-30 bg-neutral-100 text-neutral-400' 
+                  : 'bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-900 hover:border-neutral-300 shadow-xl'
+              }`}
+            >
+              <ChevronLeft size={32} strokeWidth={2.5} />
+            </motion.button>
+            
+            {/* Voice Play Button - Hero */}
+            <motion.button 
+              onClick={() => playVoice(currentStep.instruction)} 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`w-48 h-48 md:w-56 md:h-56 rounded-[4rem] bg-gradient-to-br from-neutral-900 to-neutral-800 flex items-center justify-center shadow-2xl transition-all ${
+                isPlaying ? 'ring-8 ring-primary-500/30' : ''
+              }`}
+            >
+              <Volume2 
+                color={isPlaying ? "#d4af37" : "white"} 
+                size={72} 
+                strokeWidth={2} 
+              />
+            </motion.button>
+            
+            {/* Next/Complete Button */}
+            <motion.button 
+              onClick={handleNext} 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center shadow-2xl hover:from-primary-600 hover:to-primary-500 transition-all"
+            >
+              {currentStepIndex === protocol.instructions.length - 1 ? (
+                <Trophy size={32} strokeWidth={2.5} />
+              ) : (
+                <ArrowRight size={32} strokeWidth={2.5} />
+              )}
+            </motion.button>
+            
+            {/* Verification Button */}
+            <motion.button 
+              onClick={initiateVerification} 
+              disabled={isVerifying} 
+              whileHover={{ scale: isVerifying ? 1 : 1.05 }}
+              whileTap={{ scale: isVerifying ? 1 : 0.95 }}
+              className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all shadow-xl ${
+                isVerifying 
+                  ? 'animate-pulse bg-primary-100 border-2 border-primary-200' 
+                  : 'bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-700 hover:border-primary-500/40'
+              }`}
+            >
+              {isVerifying ? (
+                <Loader2 size={28} className="animate-spin text-primary-600" strokeWidth={2.5} />
+              ) : (
+                <Camera size={28} strokeWidth={2.5} />
+              )}
+            </motion.button>
+         </motion.div>
       </div>
 
       <canvas ref={canvasRef} className="hidden" width="1280" height="720"></canvas>

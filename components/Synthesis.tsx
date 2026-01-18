@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { NeuralProtocol, Ingredient, UserPreferences, AnalysisStep } from '../types';
 import { synthesizeProtocol, generatePlatingVisual, generateDrinkVisual, generateIngredientVisual, generateSchematic, checkOnlineStatus } from '../services/geminiService';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ShoppingCart, Wine, ChevronRight, LayoutTemplate, Sparkles, Check, Zap, ZapOff, Layers, Loader2, Droplets, Leaf, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Wine, ChevronRight, LayoutTemplate, Sparkles, Check, Zap, ZapOff, Layers, Loader2, Droplets, Leaf, AlertTriangle, Trophy, Star, Flame, Heart, TrendingUp } from 'lucide-react';
 
 interface SynthesisProps {
   inventory: Ingredient[];
@@ -32,11 +32,13 @@ const SYNTHESIS_STEPS: AnalysisStep[] = [
 ];
 
 const Synthesis: React.FC<SynthesisProps> = ({ inventory, onExecute, onBack, onProtocolReady }) => {
-  const [phase, setPhase] = useState<'CALIBRATION' | 'VERIFICATION' | 'PROCESSING' | 'RESULTS'>('CALIBRATION');
+  const [phase, setPhase] = useState<'CALIBRATION' | 'VERIFICATION' | 'PROCESSING' | 'SELECTION' | 'RESULTS'>('CALIBRATION');
   const [localInventory] = useState<Ingredient[]>(inventory);
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
   const [dietary, setDietary] = useState<typeof DIETARY[number]>('None');
   const [protocol, setProtocol] = useState<NeuralProtocol | null>(null);
+  const [recipeOptions, setRecipeOptions] = useState<NeuralProtocol[]>([]);
+  const [selectedRecipeIndex, setSelectedRecipeIndex] = useState<number | null>(null);
   const [visualUrl, setVisualUrl] = useState<string | null>(null);
   const [drinkUrl, setDrinkUrl] = useState<string | null>(null);
   const [schematicUrl, setSchematicUrl] = useState<string | null>(null);
@@ -65,33 +67,58 @@ const Synthesis: React.FC<SynthesisProps> = ({ inventory, onExecute, onBack, onP
     };
 
     try {
-      setStatusLog("Invoking Intelligence Node...");
+      setStatusLog("Generating Recipe Options...");
       setProgress(20);
-      const generatedProtocol = await synthesizeProtocol(localInventory, prefs);
-      setProtocol(generatedProtocol);
+      
+      // Generate 3 recipe options in parallel
+      const recipePromises = [1, 2, 3].map(() => synthesizeProtocol(localInventory, prefs));
+      const generatedRecipes = await Promise.all(recipePromises);
+      
+      setRecipeOptions(generatedRecipes);
       updateStep('manifest', 'complete');
-      updateStep('plating', 'active');
-      setProgress(40);
+      setProgress(60);
+      setStatusLog("Recipe options generated successfully");
+      
+      // Move to selection phase
+      setTimeout(() => {
+        setPhase('SELECTION');
+      }, 800);
 
-      const v = await generatePlatingVisual(generatedProtocol);
+    } catch (err: any) {
+      console.error("Synthesis error:", err);
+      setStatusLog("Error: " + (err.message || "Unknown synthesis failure"));
+    }
+  };
+
+  const handleSelectRecipe = async (index: number) => {
+    setSelectedRecipeIndex(index);
+    const selectedProtocol = recipeOptions[index];
+    setProtocol(selectedProtocol);
+    setPhase('PROCESSING');
+    setProgress(60);
+    
+    try {
+      updateStep('plating', 'active');
+      setStatusLog("Generating plating visual...");
+      const v = await generatePlatingVisual(selectedProtocol);
       setVisualUrl(v);
       updateStep('plating', 'complete');
       updateStep('sommelier', 'active');
-      setProgress(60);
+      setProgress(80);
 
-      const d = await generateDrinkVisual(generatedProtocol.drinkPairing.name);
+      const d = await generateDrinkVisual(selectedProtocol.drinkPairing.name);
       setDrinkUrl(d);
       updateStep('sommelier', 'complete');
       updateStep('blueprint', 'active');
-      setProgress(80);
+      setProgress(90);
 
-      const s = await generateSchematic(generatedProtocol);
+      const s = await generateSchematic(selectedProtocol);
       setSchematicUrl(s);
       updateStep('blueprint', 'complete');
       updateStep('procurement', 'complete');
 
       setProgress(100);
-      onProtocolReady(generatedProtocol);
+      onProtocolReady(selectedProtocol);
       setTimeout(() => setPhase('RESULTS'), 800);
     } catch (err) {
       setPhase('CALIBRATION');
@@ -192,6 +219,146 @@ const Synthesis: React.FC<SynthesisProps> = ({ inventory, onExecute, onBack, onP
                ))}
             </div>
           </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Selection Phase - Choose from 3 recipe options
+  if (phase === 'SELECTION' && recipeOptions.length > 0) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 px-10 lg:px-24 bg-gradient-to-br from-neutral-50 via-white to-primary-50/20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-7xl mx-auto"
+        >
+          {/* Header */}
+          <div className="mb-16 text-center">
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              className="inline-flex items-center gap-3 px-6 py-3 bg-primary-500/10 backdrop-blur-xl rounded-2xl mb-6 border border-primary-500/20"
+            >
+              <Trophy size={20} className="text-primary-600" strokeWidth={2.5} />
+              <span className="text-sm font-black uppercase tracking-wider text-primary-900">Select Your Culinary Path</span>
+            </motion.div>
+            <h2 className="text-7xl font-black tracking-tight text-neutral-900 mb-4">
+              Choose Your Recipe
+            </h2>
+            <p className="text-xl text-neutral-600 font-medium max-w-2xl mx-auto">
+              We've generated <span className="text-primary-600 font-bold">{recipeOptions.length} unique recipes</span> tailored to your ingredients. Select the one that speaks to you.
+            </p>
+          </div>
+
+          {/* Recipe Options Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {recipeOptions.map((recipe, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.15 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="group relative"
+              >
+                <div className="bg-white/80 backdrop-blur-xl rounded-[3rem] p-8 border-2 border-neutral-200/60 shadow-xl hover:shadow-2xl hover:border-primary-500/40 transition-all duration-500 cursor-pointer h-full flex flex-col"
+                  onClick={() => handleSelectRecipe(index)}
+                >
+                  {/* Recipe Number Badge */}
+                  <div className="absolute -top-4 -right-4 w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
+                    <span className="text-2xl font-black text-white">{index + 1}</span>
+                  </div>
+
+                  {/* Recipe Header */}
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Star size={16} className="text-primary-500" strokeWidth={3} />
+                      <span className="text-xs font-bold uppercase tracking-wider text-primary-600">
+                        {recipe.cuisineStyle}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-black tracking-tight text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                      {recipe.name}
+                    </h3>
+                    <p className="text-sm text-neutral-600 font-medium line-clamp-3">
+                      {recipe.description}
+                    </p>
+                  </div>
+
+                  {/* Recipe Highlights */}
+                  <div className="space-y-4 mb-6 flex-1">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                        <Flame size={18} className="text-emerald-600" strokeWidth={2.5} />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Difficulty</div>
+                        <div className="text-sm font-black text-neutral-900 capitalize">{recipe.difficulty}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center">
+                        <TrendingUp size={18} className="text-violet-600" strokeWidth={2.5} />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Ingredients</div>
+                        <div className="text-sm font-black text-neutral-900">{recipe.ingredients.length} items</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center">
+                        <Heart size={18} className="text-rose-600" strokeWidth={2.5} />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Calories</div>
+                        <div className="text-sm font-black text-neutral-900">
+                          {recipe.nutritionalProfile?.calories || 'N/A'} kcal
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Drink Pairing */}
+                  <div className="p-4 bg-primary-50/50 rounded-2xl border border-primary-200/40 mb-6">
+                    <div className="flex items-center gap-3">
+                      <Wine size={16} className="text-primary-600" strokeWidth={2.5} />
+                      <div className="flex-1">
+                        <div className="text-[10px] font-bold text-primary-700 uppercase tracking-wider">Paired With</div>
+                        <div className="text-xs font-black text-primary-900">{recipe.drinkPairing.name}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Select Button */}
+                  <button
+                    onClick={() => handleSelectRecipe(index)}
+                    className="w-full py-4 px-6 bg-gradient-to-r from-neutral-900 to-neutral-800 text-white rounded-2xl font-bold uppercase tracking-wider text-sm hover:from-primary-600 hover:to-primary-500 transition-all duration-300 flex items-center justify-center gap-3 group-hover:shadow-xl"
+                  >
+                    Select Recipe
+                    <ChevronRight size={18} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Back Button */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-12 text-center"
+          >
+            <button
+              onClick={() => setPhase('CALIBRATION')}
+              className="px-8 py-4 bg-white/80 backdrop-blur-xl text-neutral-700 rounded-2xl font-bold uppercase tracking-wider text-sm hover:bg-white hover:text-neutral-900 transition-all border border-neutral-200/60 hover:border-neutral-300"
+            >
+              ← Back to Preferences
+            </button>
+          </motion.div>
         </motion.div>
       </div>
     );

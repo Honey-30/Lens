@@ -1,158 +1,206 @@
 /**
- * Premium Design System - Apple/Google Inspired
- * Best-in-class design tokens for production applications
+ * Premium Luxury Design System - Michelin-Grade Visual Language
+ * Ultra-refined design tokens for AAA-tier culinary intelligence
  */
 
 export const DesignSystem = {
-  // Color Palette - Sophisticated & Premium
+  // Color Palette - Luxury & Sophistication
   colors: {
-    // Primary - Gold Accent (Luxury)
+    // Primary - Refined Gold Spectrum (Luxury Accent)
     primary: {
-      50: '#FFFEF7',
-      100: '#FFFAEB',
-      200: '#FFF4D1',
-      300: '#FFE7A3',
-      400: '#FFD666',
-      500: '#D4AF37',  // Main Gold
-      600: '#C5A028',
-      700: '#B38B1A',
-      800: '#8B6914',
-      900: '#6B510F',
+      50: '#FFFEF9',
+      100: '#FFFBF0',
+      200: '#FFF6DE',
+      300: '#FFEEC4',
+      400: '#FFE29A',
+      500: '#D4AF37',  // Champagne Gold
+      600: '#C09F2E',
+      700: '#A68B25',
+      800: '#8B731C',
+      900: '#6B5615',
+      950: '#4A3A0F',
     },
     
-    // Neutral - Premium Grays
+    // Neutral - Ultra-Premium Grays (Apple-inspired)
     neutral: {
       0: '#FFFFFF',
-      50: '#FAFAFA',
-      100: '#F5F5F7',
-      200: '#E8E8ED',
-      300: '#D2D2D7',
-      400: '#AEAEB2',
-      500: '#8E8E93',
-      600: '#636366',
-      700: '#48484A',
-      800: '#3A3A3C',
-      900: '#1C1C1E',
+      25: '#FCFCFD',
+      50: '#F9F9FB',
+      100: '#F4F4F6',
+      200: '#E5E5EA',
+      300: '#D1D1D6',
+      400: '#A8A8B0',
+      500: '#86868B',
+      600: '#5E5E62',
+      700: '#44444A',
+      800: '#2C2C2E',
+      900: '#1A1A1C',
       950: '#0A0A0B',
     },
     
-    // Semantic Colors
-    success: '#34C759',
-    warning: '#FF9500',
-    error: '#FF3B30',
-    info: '#007AFF',
+    // Semantic Colors - Premium Palette
+    success: '#30D158',
+    warning: '#FF9F0A',
+    error: '#FF453A',
+    info: '#0A84FF',
     
-    // Glassmorphism
+    // Luxury Accents
+    accent: {
+      copper: '#B87333',
+      silver: '#C0C0C0',
+      platinum: '#E5E4E2',
+      rose: '#B76E79',
+    },
+    
+    // Glassmorphism & Depth
     glass: {
-      light: 'rgba(255, 255, 255, 0.7)',
-      dark: 'rgba(0, 0, 0, 0.5)',
-      border: 'rgba(255, 255, 255, 0.18)',
+      ultraLight: 'rgba(255, 255, 255, 0.85)',
+      light: 'rgba(255, 255, 255, 0.70)',
+      medium: 'rgba(255, 255, 255, 0.50)',
+      dark: 'rgba(0, 0, 0, 0.45)',
+      ultraDark: 'rgba(0, 0, 0, 0.60)',
+      border: 'rgba(255, 255, 255, 0.20)',
+      borderDark: 'rgba(0, 0, 0, 0.08)',
     }
   },
   
-  // Typography - SF Pro Display/Inter inspired
+  // Typography - Premium Font System
   typography: {
     fontFamily: {
-      display: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      text: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      mono: "'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
+      display: "'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      text: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
+      serif: "'Playfair Display', 'Georgia', 'Times New Roman', serif",
+      mono: "'SF Mono', 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
     },
     
     fontSize: {
-      xs: '0.75rem',      // 12px
-      sm: '0.875rem',     // 14px
-      base: '1rem',       // 16px
-      lg: '1.125rem',     // 18px
-      xl: '1.25rem',      // 20px
-      '2xl': '1.5rem',    // 24px
-      '3xl': '1.875rem',  // 30px
-      '4xl': '2.25rem',   // 36px
-      '5xl': '3rem',      // 48px
-      '6xl': '3.75rem',   // 60px
-      '7xl': '4.5rem',    // 72px
-      '8xl': '6rem',      // 96px
+      xs: '0.6875rem',    // 11px - micro text
+      sm: '0.8125rem',    // 13px - small text
+      base: '0.9375rem',  // 15px - body
+      md: '1rem',         // 16px - body emphasis
+      lg: '1.125rem',     // 18px - subtitle
+      xl: '1.375rem',     // 22px - section title
+      '2xl': '1.75rem',   // 28px - card title
+      '3xl': '2.25rem',   // 36px - page title
+      '4xl': '3rem',      // 48px - hero
+      '5xl': '3.75rem',   // 60px - display
+      '6xl': '4.5rem',    // 72px - hero large
+      '7xl': '6rem',      // 96px - splash
+      '8xl': '8rem',      // 128px - ultra display
     },
     
     fontWeight: {
+      thin: 200,
       light: 300,
       regular: 400,
       medium: 500,
       semibold: 600,
       bold: 700,
       heavy: 800,
+      black: 900,
     },
     
     lineHeight: {
-      tight: 1.2,
+      none: 1,
+      tight: 1.15,
+      snug: 1.35,
       normal: 1.5,
-      relaxed: 1.75,
+      relaxed: 1.65,
+      loose: 1.85,
     },
     
     letterSpacing: {
-      tight: '-0.02em',
+      tighter: '-0.05em',
+      tight: '-0.025em',
       normal: '0',
-      wide: '0.02em',
+      wide: '0.025em',
       wider: '0.05em',
+      widest: '0.1em',
+      luxury: '0.15em',  // Ultra wide for premium feel
     }
   },
   
-  // Spacing - 8px base grid (Apple standard)
+  // Spacing - 4px base grid (Premium precision)
   spacing: {
     0: '0',
-    1: '0.25rem',   // 4px
-    2: '0.5rem',    // 8px
-    3: '0.75rem',   // 12px
-    4: '1rem',      // 16px
-    5: '1.25rem',   // 20px
-    6: '1.5rem',    // 24px
-    8: '2rem',      // 32px
-    10: '2.5rem',   // 40px
-    12: '3rem',     // 48px
-    16: '4rem',     // 64px
-    20: '5rem',     // 80px
-    24: '6rem',     // 96px
-    32: '8rem',     // 128px
+    0.5: '0.125rem',  // 2px
+    1: '0.25rem',     // 4px
+    1.5: '0.375rem',  // 6px
+    2: '0.5rem',      // 8px
+    2.5: '0.625rem',  // 10px
+    3: '0.75rem',     // 12px
+    3.5: '0.875rem',  // 14px
+    4: '1rem',        // 16px
+    5: '1.25rem',     // 20px
+    6: '1.5rem',      // 24px
+    7: '1.75rem',     // 28px
+    8: '2rem',        // 32px
+    9: '2.25rem',     // 36px
+    10: '2.5rem',     // 40px
+    11: '2.75rem',    // 44px
+    12: '3rem',       // 48px
+    14: '3.5rem',     // 56px
+    16: '4rem',       // 64px
+    18: '4.5rem',     // 72px
+    20: '5rem',       // 80px
+    24: '6rem',       // 96px
+    28: '7rem',       // 112px
+    32: '8rem',       // 128px
+    36: '9rem',       // 144px
+    40: '10rem',      // 160px
+    48: '12rem',      // 192px
+    56: '14rem',      // 224px
+    64: '16rem',      // 256px
   },
   
-  // Border Radius - Smooth, premium corners
+  // Border Radius - Premium curvature
   borderRadius: {
     none: '0',
-    sm: '0.375rem',   // 6px
-    md: '0.5rem',     // 8px
-    lg: '0.75rem',    // 12px
-    xl: '1rem',       // 16px
-    '2xl': '1.5rem',  // 24px
-    '3xl': '2rem',    // 32px
+    xs: '0.25rem',    // 4px
+    sm: '0.5rem',     // 8px
+    md: '0.75rem',    // 12px
+    lg: '1rem',       // 16px
+    xl: '1.25rem',    // 20px
+    '2xl': '1.75rem', // 28px
+    '3xl': '2.5rem',  // 40px
+    '4xl': '3rem',    // 48px
     full: '9999px',
   },
   
-  // Shadows - Subtle, elegant depth
+  // Shadows - Ultra-refined depth system
   shadows: {
-    xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    sm: '0 2px 4px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04)',
-    md: '0 4px 8px 0 rgba(0, 0, 0, 0.07), 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
-    lg: '0 8px 16px 0 rgba(0, 0, 0, 0.08), 0 4px 8px 0 rgba(0, 0, 0, 0.06)',
-    xl: '0 16px 32px 0 rgba(0, 0, 0, 0.1), 0 8px 16px 0 rgba(0, 0, 0, 0.08)',
-    '2xl': '0 24px 48px 0 rgba(0, 0, 0, 0.12), 0 12px 24px 0 rgba(0, 0, 0, 0.1)',
-    inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-    glow: '0 0 20px rgba(212, 175, 55, 0.3)',
+    xs: '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02)',
+    sm: '0 2px 6px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.03)',
+    md: '0 4px 12px 0 rgba(0, 0, 0, 0.06), 0 2px 6px 0 rgba(0, 0, 0, 0.04)',
+    lg: '0 8px 20px 0 rgba(0, 0, 0, 0.07), 0 4px 12px 0 rgba(0, 0, 0, 0.05)',
+    xl: '0 16px 32px 0 rgba(0, 0, 0, 0.08), 0 8px 20px 0 rgba(0, 0, 0, 0.06)',
+    '2xl': '0 24px 48px 0 rgba(0, 0, 0, 0.10), 0 12px 32px 0 rgba(0, 0, 0, 0.08)',
+    '3xl': '0 32px 64px 0 rgba(0, 0, 0, 0.12), 0 20px 48px 0 rgba(0, 0, 0, 0.10)',
+    inner: 'inset 0 2px 6px 0 rgba(0, 0, 0, 0.04)',
+    glow: '0 0 24px rgba(212, 175, 55, 0.25)',
+    glowStrong: '0 0 48px rgba(212, 175, 55, 0.35)',
+    premium: '0 32px 96px -12px rgba(0, 0, 0, 0.15), 0 16px 48px -8px rgba(0, 0, 0, 0.10)',
   },
   
-  // Transitions - Smooth, natural animations
+  // Transitions - Buttery smooth animations
   transitions: {
-    fast: '150ms cubic-bezier(0.4, 0, 0.2, 1)',
-    base: '250ms cubic-bezier(0.4, 0, 0.2, 1)',
-    slow: '350ms cubic-bezier(0.4, 0, 0.2, 1)',
-    spring: '500ms cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    instant: '100ms cubic-bezier(0.4, 0, 0.2, 1)',
+    fast: '200ms cubic-bezier(0.4, 0, 0.2, 1)',
+    base: '300ms cubic-bezier(0.4, 0, 0.2, 1)',
+    slow: '450ms cubic-bezier(0.4, 0, 0.2, 1)',
+    slower: '600ms cubic-bezier(0.4, 0, 0.2, 1)',
+    spring: '700ms cubic-bezier(0.34, 1.56, 0.64, 1)',
   },
   
-  // Easing Functions
+  // Easing Functions - Premium motion
   easing: {
+    linear: 'linear',
     easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
     easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
     easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
-    spring: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
     apple: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+    luxury: 'cubic-bezier(0.16, 1, 0.3, 1)',  // Ultra smooth
   },
   
   // Breakpoints - Responsive design

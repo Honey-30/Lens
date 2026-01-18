@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Ingredient, NeuralProtocol } from '../types';
 import { BarChart, Bar, ResponsiveContainer, Tooltip, Cell, XAxis, PieChart, Pie } from 'recharts';
 import { motion } from 'framer-motion';
-import { AlertTriangle, Plus, ShieldCheck, Sun, Eye, PieChart as PieChartIcon } from 'lucide-react';
+import { AlertTriangle, Plus, ShieldCheck, Sun, Eye, PieChart as PieChartIcon, Brain, Sparkles } from 'lucide-react';
+import OfflineIntelligence from './OfflineIntelligence';
 
 interface DashboardProps {
   inventory: Ingredient[];
@@ -13,6 +14,8 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ inventory, protocol, onSynthesize, onAddMore }) => {
+  const [showIntelligence, setShowIntelligence] = useState(false);
+  
   const wasteData = [
     { name: 'M', rescued: 12 }, { name: 'T', rescued: 8 }, { name: 'W', rescued: 25 },
     { name: 'T', rescued: 15 }, { name: 'F', rescued: 42 }, { name: 'S', rescued: 30 }, { name: 'S', rescued: 18 },
@@ -41,43 +44,43 @@ const Dashboard: React.FC<DashboardProps> = ({ inventory, protocol, onSynthesize
   const titleSize = isHighDensity ? "text-xl" : "text-2xl";
 
   return (
-    <div className={`min-h-screen pt-28 pb-16 px-6 md:px-12 max-w-[1800px] mx-auto bg-transparent transition-all duration-700`}>
+    <div className="min-h-screen pt-32 pb-24 px-8 md:px-16 max-w-[1900px] mx-auto bg-gradient-to-br from-neutral-0 via-neutral-25 to-neutral-50 transition-all duration-700">
       <motion.div 
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12"
+        className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14"
       >
         
         {/* Left Column: Metrics */}
-        <div className="lg:col-span-4 space-y-8">
-          <section className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-black/[0.03] shadow-sm">
-            <div className="flex justify-between items-start mb-8">
-               <h3 className="text-[10px] uppercase tracking-[0.4em] text-black/50 font-bold">Intelligence Context</h3>
-               <ShieldCheck className="text-[#C5A028]/60" size={14} />
+        <div className="lg:col-span-4 space-y-10">
+          <section className="bg-white/70 backdrop-blur-2xl p-10 md:p-12 rounded-[3rem] border border-neutral-200/40 shadow-lg">
+            <div className="flex justify-between items-start mb-10">
+               <h3 className="text-xs uppercase tracking-[0.15em] text-neutral-500 font-bold">Intelligence Context</h3>
+               <ShieldCheck className="text-primary-600/70" size={16} strokeWidth={2.5} />
             </div>
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                 <div className="w-10 h-10 rounded-xl bg-black/[0.02] flex items-center justify-center">
-                    <Sun size={14} className={scanQuality === 'OPTIMAL' ? 'text-emerald-700/70' : 'text-amber-700/70'} />
+            <div className="space-y-7">
+              <div className="flex items-center gap-5">
+                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center shadow-inner">
+                    <Sun size={16} className={scanQuality === 'OPTIMAL' ? 'text-emerald-600' : 'text-amber-600'} strokeWidth={2.5} />
                  </div>
                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black/80">
-                      {scanQuality === 'OPTIMAL' ? 'Fidelity Optimal' : 'Environment Adjusted'}
+                    <p className="text-xs font-bold uppercase tracking-[0.08em] text-neutral-800 mb-1">
+                      {scanQuality === 'OPTIMAL' ? 'Optimal Fidelity' : 'Compensated Detection'}
                     </p>
-                    <p className="text-[10px] text-black/50 font-medium uppercase tracking-tight">
-                      {scanQuality === 'OPTIMAL' ? 'Perfect lighting detected.' : 'Compensating for shadows.'}
+                    <p className="text-[11px] text-neutral-500 font-medium">
+                      {scanQuality === 'OPTIMAL' ? 'Perfect lighting conditions' : 'Shadow compensation active'}
                     </p>
                  </div>
               </div>
-              <div className="flex items-center gap-4">
-                 <div className="w-10 h-10 rounded-xl bg-black/[0.02] flex items-center justify-center">
-                    <Eye size={14} className="text-black/40" />
+              <div className="flex items-center gap-5">
+                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center shadow-inner">
+                    <Eye size={16} className="text-neutral-600" strokeWidth={2.5} />
                  </div>
                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black/80">Ocular Boundaries</p>
-                    <p className="text-[10px] text-black/50 font-medium uppercase tracking-tight">
-                      Verified visible nodes registered.
+                    <p className="text-xs font-bold uppercase tracking-[0.08em] text-neutral-800 mb-1">Visual Boundaries</p>
+                    <p className="text-[11px] text-neutral-500 font-medium">
+                      All visible elements registered
                     </p>
                  </div>
               </div>
@@ -86,16 +89,17 @@ const Dashboard: React.FC<DashboardProps> = ({ inventory, protocol, onSynthesize
 
           {protocol && (
             <motion.section 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-black/[0.03] shadow-sm overflow-hidden"
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="bg-white/70 backdrop-blur-2xl p-10 md:p-12 rounded-[3rem] border border-neutral-200/40 shadow-lg overflow-hidden"
             >
-              <div className="flex justify-between items-start mb-6">
+              <div className="flex justify-between items-start mb-8">
                  <div>
-                    <h3 className="text-[10px] uppercase tracking-[0.4em] text-black/50 font-bold">Caloric Blueprint</h3>
-                    <p className="text-2xl font-bold tracking-tight mt-1 leading-none text-[#0A0A0B]">Nutrition Matrix</p>
+                    <h3 className="text-xs uppercase tracking-[0.15em] text-neutral-500 font-bold mb-2">Nutritional Analysis</h3>
+                    <p className="text-3xl font-black tracking-tight leading-none text-neutral-950">Macro Balance</p>
                  </div>
-                 <PieChartIcon size={14} className="text-[#C5A028]/60" />
+                 <PieChartIcon size={16} className="text-primary-600/70" strokeWidth={2.5} />
               </div>
               <div className="h-48 mb-4">
                 <ResponsiveContainer width="100%" height="100%">
@@ -146,66 +150,89 @@ const Dashboard: React.FC<DashboardProps> = ({ inventory, protocol, onSynthesize
           </section>
 
           <motion.button 
-            whileHover={{ y: -3 }}
-            whileTap={{ scale: 0.99 }}
+            whileHover={{ y: -6, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={onSynthesize}
-            className="w-full py-7 bg-[#0A0A0B] text-white rounded-[2rem] font-bold shadow-lg flex items-center justify-center gap-4 transition-all group"
+            className="w-full py-8 bg-gradient-to-br from-neutral-900 to-neutral-950 text-white rounded-[2.5rem] font-bold shadow-2xl flex items-center justify-center gap-4 transition-all group overflow-hidden relative"
           >
-            <span className="tracking-[0.2em] uppercase text-[11px] font-bold">Synthesize Protocol</span>
-            <Plus size={18} className="text-[#C5A028] group-hover:rotate-90 transition-transform duration-500" />
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/20 to-primary-500/0"
+              initial={{ x: '-100%' }}
+              whileHover={{ x: '100%' }}
+              transition={{ duration: 0.8, ease: 'easeInOut' }}
+            />
+            <span className="relative z-10 tracking-[0.12em] uppercase text-xs font-black">Generate Protocol</span>
+            <Plus size={20} className="relative z-10 text-primary-400 group-hover:rotate-180 transition-transform duration-700" strokeWidth={2.5} />
           </motion.button>
         </div>
 
         {/* Right Column: Inventory */}
         <div className="lg:col-span-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-14 gap-8">
             <div>
-              <span className="text-[10px] uppercase tracking-[0.5em] font-bold text-[#C5A028] mb-2 block">Molecular Ledger</span>
-              <h2 className="text-5xl md:text-6xl font-bold tracking-tighter text-[#0A0A0B]">Inventory <span className="serif italic text-[#C5A028] font-normal">Manifest</span></h2>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></div>
+                <span className="text-xs uppercase tracking-[0.15em] font-bold text-primary-600">Active Inventory</span>
+              </div>
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-[-0.03em] text-neutral-950 leading-none">
+                Material <span className="bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent font-serif italic font-normal">Manifest</span>
+              </h2>
             </div>
-            <button 
+            <motion.button 
               onClick={onAddMore}
-              className="px-8 py-3.5 bg-white/80 backdrop-blur-md border border-black/[0.08] rounded-full text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-[#0A0A0B] hover:text-white transition-all shadow-sm"
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-8 py-4 bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-2xl text-xs uppercase tracking-[0.12em] font-bold hover:bg-neutral-950 hover:text-white hover:border-neutral-950 transition-all shadow-md"
             >
-              Inject Material
-            </button>
+              Add Materials
+            </motion.button>
           </div>
 
-          <div className={`grid ${gridCols} gap-6 md:gap-8`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {inventory.length > 0 ? inventory.map((item, i) => (
               <motion.div 
                 key={item.id} 
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className={`bg-white ${cardPadding} rounded-[2.5rem] border border-black/[0.03] shadow-sm hover:shadow-md transition-all duration-700 group relative overflow-hidden`}
+                transition={{ delay: i * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="bg-white/70 backdrop-blur-2xl p-7 md:p-8 rounded-[2.5rem] border border-neutral-200/40 shadow-lg hover:shadow-2xl transition-all duration-500 group relative overflow-hidden"
               >
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h4 className={`${titleSize} font-bold tracking-tighter mb-1 text-[#0A0A0B] line-clamp-1`}>
-                      <span className="text-black/30 font-medium">{getHumilityPrefix(item.confidence)}</span>{item.name}
-                    </h4>
-                    <span className="mono text-[9px] text-black/40 uppercase tracking-[0.15em] font-bold italic">{item.scientificName}</span>
-                  </div>
-                  {item.expires_in_days <= 2 && (
-                    <div className="w-8 h-8 rounded-full bg-rose-50 flex items-center justify-center">
-                       <AlertTriangle size={12} className="text-rose-600/60" />
+                {/* Hover gradient effect */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                />
+                
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-2xl font-black tracking-tight mb-1.5 text-neutral-950 line-clamp-1">
+                        <span className="text-neutral-400 font-semibold text-base">{getHumilityPrefix(item.confidence)}</span>{item.name}
+                      </h4>
+                      <span className="mono text-[10px] text-neutral-500 uppercase tracking-[0.1em] font-semibold italic">{item.scientificName}</span>
                     </div>
-                  )}
-                </div>
-
-                <div className="space-y-4">
-                  <div className="h-[2px] bg-black/[0.03] rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${item.vitality_score}%` }}
-                      transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
-                      className={`h-full transition-all duration-1000 ${item.vitality_score < 40 ? 'bg-rose-500/50' : 'bg-[#C5A028]/50'}`}
-                    />
+                    {item.expires_in_days <= 2 && (
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-100 to-rose-50 flex items-center justify-center shadow-sm ml-3">
+                         <AlertTriangle size={14} className="text-rose-600" strokeWidth={2.5} />
+                      </div>
+                    )}
                   </div>
-                  <div className="flex justify-between items-center text-[9px] uppercase font-bold tracking-[0.3em] text-black/40">
-                    <span>Vitality</span>
-                    <span>{item.vitality_score}%</span>
+
+                  <div className="space-y-5">
+                    <div className="h-2.5 bg-neutral-100 rounded-full overflow-hidden shadow-inner">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${item.vitality_score}%` }}
+                        transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+                        className={`h-full rounded-full transition-all duration-1000 ${
+                          item.vitality_score < 40 ? 'bg-gradient-to-r from-rose-500 to-rose-600' : 'bg-gradient-to-r from-primary-500 to-primary-600'
+                        }`}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-[0.12em] text-neutral-600">
+                      <span>Vitality Index</span>
+                      <span className="text-neutral-900">{item.vitality_score}%</span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -224,6 +251,31 @@ const Dashboard: React.FC<DashboardProps> = ({ inventory, protocol, onSynthesize
           </div>
         </div>
       </motion.div>
+
+      {/* Offline Intelligence Modal */}
+      {showIntelligence && (
+        <OfflineIntelligence
+          isOpen={showIntelligence}
+          onClose={() => setShowIntelligence(false)}
+          currentInventory={inventory}
+        />
+      )}
+
+      {/* Floating Intelligence Button */}
+      <motion.button
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowIntelligence(true)}
+        className="fixed bottom-12 right-12 w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 shadow-2xl flex items-center justify-center z-50 hover:shadow-3xl transition-all group"
+      >
+        <Brain size={32} className="text-white group-hover:scale-110 transition-transform" strokeWidth={2.5} />
+        <div className="absolute -top-2 -right-2 w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center">
+          <Sparkles size={16} className="text-white" strokeWidth={3} />
+        </div>
+      </motion.button>
     </div>
   );
 };
