@@ -174,13 +174,13 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
     }
   };
 
-  // Adaptive Typography Logic
+  // Adaptive Typography Logic - Premium, readable sizing
   const instructionLength = currentStep.instruction.length;
-  let instructionFontSize = "text-5xl md:text-6xl lg:text-7xl";
+  let instructionFontSize = "text-2xl md:text-3xl lg:text-4xl";
   if (instructionLength > 150) {
-    instructionFontSize = "text-3xl md:text-4xl lg:text-5xl";
+    instructionFontSize = "text-lg md:text-xl lg:text-2xl";
   } else if (instructionLength > 100) {
-    instructionFontSize = "text-4xl md:text-5xl lg:text-6xl";
+    instructionFontSize = "text-xl md:text-2xl lg:text-3xl";
   }
 
   const containerPadding = instructionLength > 150 ? "pt-12 pb-8" : "pt-20 pb-12";
@@ -358,19 +358,22 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
       </AnimatePresence>
 
       <div className={`relative z-10 w-full max-w-6xl px-12 flex flex-col items-center gap-16 text-center transition-all duration-500 ${containerPadding}`}>
-         {/* Progress Dots - Enhanced */}
+         {/* Progress Dots - Premium Enhanced */}
          <div className="flex items-center gap-3">
             {protocol.instructions.map((_, i) => (
               <motion.div 
                 key={i} 
-                initial={{ scale: 0.8 }}
-                animate={{ scale: i === currentStepIndex ? 1.2 : 1 }}
-                className={`h-2 rounded-full transition-all duration-700 ${
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ 
+                  scale: i === currentStepIndex ? 1.2 : 1,
+                  opacity: 1
+                }}
+                className={`h-2.5 rounded-full transition-all duration-700 ${
                   i === currentStepIndex 
-                    ? 'w-16 bg-gradient-to-r from-primary-500 to-primary-600 shadow-lg' 
+                    ? 'w-20 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 shadow-[0_4px_16px_-2px_rgba(212,175,55,0.6)]' 
                     : i < currentStepIndex
-                    ? 'w-6 bg-emerald-500'
-                    : 'w-6 bg-neutral-200'
+                    ? 'w-8 bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-sm'
+                    : 'w-8 bg-neutral-200'
                 }`} 
               />
             ))}
@@ -386,23 +389,24 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
              className="w-full min-h-[400px] flex flex-col items-center justify-center gap-10"
            >
               <div className="space-y-8">
-                 {/* Step Header */}
-                 <div className="flex items-center justify-center gap-5 mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
-                      <Target size={24} className="text-white" strokeWidth={2.5} />
+                 {/* Step Header - Premium Design */}
+                 <div className="flex items-center justify-center gap-4 mb-8">
+                    <div className="relative w-16 h-16 rounded-3xl bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center shadow-[0_8px_32px_-8px_rgba(212,175,55,0.5)]">
+                      <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-white/10 to-transparent" />
+                      <Target size={28} className="text-white drop-shadow-lg relative z-10" strokeWidth={2.5} />
                     </div>
                     <div className="text-left">
-                      <span className="text-sm font-black uppercase tracking-wider text-primary-600">
+                      <span className="text-xs font-black uppercase tracking-[0.15em] text-primary-600 mb-1 block">
                         Step {currentStepIndex + 1} of {protocol.instructions.length}
                       </span>
-                      <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                      <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-[0.12em]">
                         {currentStep.technique}
                       </div>
                     </div>
                  </div>
                  
                  {/* Main Instruction - Premium Typography */}
-                 <h2 className={`${instructionFontSize} font-black tracking-tight leading-[1.1] text-neutral-900 transition-all duration-500 max-w-4xl mx-auto px-8`}>
+                 <h2 className={`${instructionFontSize} font-black tracking-tight leading-[1.3] text-neutral-900 transition-all duration-500 max-w-3xl mx-auto px-6 drop-shadow-sm`}>
                     {currentStep.instruction}
                  </h2>
                  
@@ -430,44 +434,53 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
                   animate={{ opacity: 1, y: 0 }}
                   className="flex flex-col items-center gap-8 pt-8"
                 >
-                   <div className="relative w-40 h-40">
-                      <svg className="w-full h-full -rotate-90">
-                         <circle cx="80" cy="80" r="72" stroke="rgba(212,175,55,0.1)" strokeWidth="8" fill="transparent" />
+                   <div className="relative w-48 h-48">
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-50 to-primary-100/50 blur-2xl" />
+                      <svg className="w-full h-full -rotate-90 relative z-10">
+                         <circle cx="96" cy="96" r="88" stroke="rgba(212,175,55,0.08)" strokeWidth="10" fill="transparent" />
                          <motion.circle 
-                            cx="80" cy="80" r="72" 
+                            cx="96" cy="96" r="88" 
                             stroke="url(#gradient)" 
-                            strokeWidth="8" 
+                            strokeWidth="10" 
                             fill="transparent"
-                            strokeDasharray="452" 
+                            strokeDasharray="553" 
                             strokeLinecap="round"
-                            animate={{ strokeDashoffset: 452 - (452 * (timeLeft / currentStep.timer_seconds)) }}
+                            animate={{ strokeDashoffset: 553 - (553 * (timeLeft / currentStep.timer_seconds)) }}
                             transition={{ duration: 0.5 }}
+                            style={{ filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.3))' }}
                          />
                          <defs>
                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                              <stop offset="0%" stopColor="#d4af37" />
+                             <stop offset="50%" stopColor="#e5c158" />
                              <stop offset="100%" stopColor="#c19a2f" />
                            </linearGradient>
                          </defs>
                       </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <Timer size={24} className="text-primary-600 mb-2" strokeWidth={2.5} />
-                        <div className="font-mono text-3xl font-black text-neutral-900">{formatTime(timeLeft)}</div>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-3 shadow-lg">
+                          <Timer size={20} className="text-white" strokeWidth={2.5} />
+                        </div>
+                        <div className="font-mono text-4xl font-black text-neutral-900 tracking-tight">{formatTime(timeLeft)}</div>
                       </div>
                    </div>
-                   <div className="flex gap-5">
-                      <button 
-                        onClick={() => setIsTimerRunning(!isTimerRunning)} 
-                        className="px-6 py-4 rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 text-white shadow-xl hover:from-primary-600 hover:to-primary-500 transition-all duration-300 flex items-center gap-3 font-bold"
+                   <div className="flex gap-4">
+                      <motion.button 
+                        onClick={() => setIsTimerRunning(!isTimerRunning)}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="px-8 py-4 rounded-3xl bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 text-white shadow-[0_8px_32px_-8px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.4)] hover:from-primary-600 hover:to-primary-500 transition-all duration-300 flex items-center gap-3 font-bold text-sm uppercase tracking-wider"
                       >
-                        {isTimerRunning ? <><Pause size={18} strokeWidth={2.5} /> Pause</> : <><Play size={18} strokeWidth={2.5} /> Start</>}
-                      </button>
-                      <button 
-                        onClick={() => { setTimeLeft(currentStep.timer_seconds || 0); setIsTimerRunning(false); }} 
-                        className="px-6 py-4 rounded-2xl bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-700 hover:border-neutral-300 hover:bg-white transition-all shadow-lg flex items-center gap-3 font-bold"
+                        {isTimerRunning ? <><Pause size={20} strokeWidth={2.5} /> Pause</> : <><Play size={20} strokeWidth={2.5} /> Start</>}
+                      </motion.button>
+                      <motion.button 
+                        onClick={() => { setTimeLeft(currentStep.timer_seconds || 0); setIsTimerRunning(false); }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="px-8 py-4 rounded-3xl bg-white/90 backdrop-blur-xl border-2 border-neutral-200/80 text-neutral-700 hover:border-primary-300 hover:bg-white hover:shadow-lg transition-all shadow-md flex items-center gap-3 font-bold text-sm uppercase tracking-wider"
                       >
-                        <RotateCcw size={18} strokeWidth={2.5} /> Reset
-                      </button>
+                        <RotateCcw size={20} strokeWidth={2.5} /> Reset
+                      </motion.button>
                    </div>
                 </motion.div>
               )}
@@ -481,79 +494,84 @@ const ExecutionMode: React.FC<ExecutionModeProps> = ({ protocol, onComplete }) =
            transition={{ delay: 0.3 }}
            className="flex items-center justify-center gap-8 md:gap-12 pt-12"
          >
-            {/* Assistant Button */}
+            {/* Assistant Button - Premium */}
             <motion.button 
               onClick={() => setIsChatOpen(!isChatOpen)} 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all shadow-xl ${
+              whileHover={{ scale: 1.08, rotate: 2 }}
+              whileTap={{ scale: 0.92 }}
+              className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all ${
                 isChatOpen 
-                  ? 'bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-2xl' 
-                  : 'bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-700 hover:border-primary-500/40'
+                  ? 'bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 text-white shadow-[0_12px_40px_-8px_rgba(212,175,55,0.6)]' 
+                  : 'bg-white/90 backdrop-blur-xl border-2 border-neutral-200/80 text-neutral-700 hover:border-primary-400 shadow-lg hover:shadow-xl'
               }`}
             >
-              <MessageSquare size={28} strokeWidth={2.5} />
+              <MessageSquare size={28} strokeWidth={2.5} className={isChatOpen ? 'drop-shadow-lg' : ''} />
             </motion.button>
             
-            {/* Previous Button */}
+            {/* Previous Button - Premium */}
             <motion.button 
               disabled={currentStepIndex === 0} 
               onClick={handlePrev} 
-              whileHover={{ scale: currentStepIndex === 0 ? 1 : 1.05 }}
-              whileTap={{ scale: currentStepIndex === 0 ? 1 : 0.95 }}
+              whileHover={{ scale: currentStepIndex === 0 ? 1 : 1.08, x: currentStepIndex === 0 ? 0 : -2 }}
+              whileTap={{ scale: currentStepIndex === 0 ? 1 : 0.92 }}
               className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all ${
                 currentStepIndex === 0 
-                  ? 'opacity-30 bg-neutral-100 text-neutral-400' 
-                  : 'bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-900 hover:border-neutral-300 shadow-xl'
+                  ? 'opacity-20 bg-neutral-100 text-neutral-300 cursor-not-allowed' 
+                  : 'bg-white/90 backdrop-blur-xl border-2 border-neutral-200/80 text-neutral-900 hover:border-neutral-400 hover:shadow-xl shadow-lg'
               }`}
             >
               <ChevronLeft size={32} strokeWidth={2.5} />
             </motion.button>
             
-            {/* Voice Play Button - Hero */}
+            {/* Voice Play Button - Hero Premium */}
             <motion.button 
               onClick={() => playVoice(currentStep.instruction)} 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`w-48 h-48 md:w-56 md:h-56 rounded-[4rem] bg-gradient-to-br from-neutral-900 to-neutral-800 flex items-center justify-center shadow-2xl transition-all ${
-                isPlaying ? 'ring-8 ring-primary-500/30' : ''
+              animate={isPlaying ? { scale: [1, 1.02, 1] } : {}}
+              transition={isPlaying ? { duration: 1.5, repeat: Infinity } : {}}
+              className={`relative w-48 h-48 md:w-56 md:h-56 rounded-[4rem] bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 flex items-center justify-center shadow-[0_24px_64px_-12px_rgba(0,0,0,0.4)] transition-all ${
+                isPlaying ? 'ring-8 ring-primary-500/40 shadow-[0_32px_80px_-12px_rgba(212,175,55,0.5)]' : 'hover:shadow-[0_32px_80px_-12px_rgba(0,0,0,0.5)]'
               }`}
             >
+              <div className="absolute inset-0 rounded-[4rem] bg-gradient-to-t from-white/5 to-transparent" />
               <Volume2 
                 color={isPlaying ? "#d4af37" : "white"} 
                 size={72} 
                 strokeWidth={2} 
+                className={isPlaying ? 'drop-shadow-[0_8px_16px_rgba(212,175,55,0.5)]' : 'drop-shadow-2xl'}
               />
             </motion.button>
             
-            {/* Next/Complete Button */}
+            {/* Next/Complete Button - Premium */}
             <motion.button 
               onClick={handleNext} 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center shadow-2xl hover:from-primary-600 hover:to-primary-500 transition-all"
+              whileHover={{ scale: 1.08, x: 2 }}
+              whileTap={{ scale: 0.92 }}
+              className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 text-white flex items-center justify-center shadow-[0_12px_40px_-8px_rgba(212,175,55,0.5)] hover:shadow-[0_16px_48px_-8px_rgba(212,175,55,0.7)] transition-all"
             >
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-white/10 to-transparent" />
               {currentStepIndex === protocol.instructions.length - 1 ? (
-                <Trophy size={32} strokeWidth={2.5} />
+                <Trophy size={32} strokeWidth={2.5} className="drop-shadow-lg relative z-10" />
               ) : (
-                <ArrowRight size={32} strokeWidth={2.5} />
+                <ArrowRight size={32} strokeWidth={2.5} className="drop-shadow-lg relative z-10" />
               )}
             </motion.button>
             
-            {/* Verification Button */}
+            {/* Verification Button - Premium */}
             <motion.button 
               onClick={initiateVerification} 
               disabled={isVerifying} 
-              whileHover={{ scale: isVerifying ? 1 : 1.05 }}
-              whileTap={{ scale: isVerifying ? 1 : 0.95 }}
-              className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all shadow-xl ${
+              whileHover={{ scale: isVerifying ? 1 : 1.08 }}
+              whileTap={{ scale: isVerifying ? 1 : 0.92 }}
+              className={`relative w-20 h-20 rounded-3xl flex items-center justify-center transition-all shadow-lg ${
                 isVerifying 
-                  ? 'animate-pulse bg-primary-100 border-2 border-primary-200' 
-                  : 'bg-white/80 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-700 hover:border-primary-500/40'
+                  ? 'animate-pulse bg-primary-100 border-2 border-primary-300 shadow-[0_8px_32px_-8px_rgba(212,175,55,0.3)]' 
+                  : 'bg-white/90 backdrop-blur-xl border-2 border-neutral-200/80 text-neutral-700 hover:border-primary-400 hover:shadow-xl'
               }`}
             >
               {isVerifying ? (
-                <Loader2 size={28} className="animate-spin text-primary-600" strokeWidth={2.5} />
+                <Loader2 size={28} className="animate-spin text-primary-600 drop-shadow" strokeWidth={2.5} />
               ) : (
                 <Camera size={28} strokeWidth={2.5} />
               )}
