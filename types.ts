@@ -113,6 +113,7 @@ export interface UserPreferences {
   highFidelityVisuals: boolean;
   confidenceMemory?: Record<string, number>; 
   outcomeFeedback?: Record<string, 'success' | 'neutral' | 'improvement'>;
+  apiKey?: string; // User's Google Gemini API key
 }
 
 export interface PerceptionResult {

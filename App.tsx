@@ -13,6 +13,7 @@ import { db } from './utils/database';
 import { logger } from './utils/logger';
 import { performanceMonitor } from './utils/performance';
 import { prefetchCommonData } from './services/enhancedGeminiService';
+import { setRuntimeApiKey } from './services/geminiService';
 
 const App: React.FC = () => {
   const [viewState, setViewState] = useState<ViewState>(ViewState.LANDING);
@@ -25,7 +26,8 @@ const App: React.FC = () => {
       allergies: [],
       cuisinePreference: '',
       instamartSync: true,
-      highFidelityVisuals: true
+      highFidelityVisuals: true,
+      apiKey: ''
     };
   });
 
@@ -33,6 +35,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const initialize = async () => {
       try {
+        // Set runtime API key from saved preferences
+        setRuntimeApiKey(preferences.apiKey || null);
+        
         await db.initialize();
         logger.info('[App] Database initialized');
         
@@ -43,8 +48,10 @@ const App: React.FC = () => {
           logger.info('[App] Loaded persisted ingredients', { count: savedIngredients.length });
         }
 
-        // Prefetch common data
-        await prefetchCommonData();
+        // Prefetch common data (only if API key is configured)
+        if (preferences.apiKey || process.env.API_KEY) {
+          await prefetchCommonData();
+        }
       } catch (error) {
         logger.error('[App] Initialization failed', { error }, error as Error);
       }
@@ -56,7 +63,11 @@ const App: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem('culinary_lens_prefs', JSON.stringify(preferences));
-    logger.debug('[App] Preferences updated', { preferences });
+    
+    // Set runtime API key whenever preferences change
+    setRuntimeApiKey(preferences.apiKey || null);
+    
+    logger.debug('[App] Preferences updated', { preferences: { ...preferences, apiKey: preferences.apiKey ? '***' : undefined } });
   }, [preferences]);
 
   const handleStart = () => setViewState(ViewState.UPLOAD);

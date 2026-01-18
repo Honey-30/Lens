@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { UserPreferences } from '../types';
 import { validateApiKey } from '../services/geminiService';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, ShieldAlert, X, Loader2, Save, Trash2, Globe2, AlertCircle } from 'lucide-react';
+import { User, ShieldAlert, X, Loader2, Save, Trash2, Globe2, AlertCircle, Key, Eye, EyeOff } from 'lucide-react';
 
 interface SettingsProps {
   preferences: UserPreferences;
@@ -18,6 +18,7 @@ const Settings: React.FC<SettingsProps> = ({ preferences, onUpdate, onBack }) =>
   const [newAllergy, setNewAllergy] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -117,6 +118,43 @@ const Settings: React.FC<SettingsProps> = ({ preferences, onUpdate, onBack }) =>
           </div>
 
           <div className="lg:col-span-4 space-y-10">
+             {/* API Key Configuration */}
+             <div className="bg-gradient-to-br from-[#D4AF37]/5 to-[#C5A028]/10 p-10 md:p-12 rounded-[3.5rem] border-2 border-[#D4AF37]/20 shadow-lg">
+                <div className="flex items-center gap-5 mb-6">
+                  <Key size={20} className="text-[#D4AF37]" />
+                  <h3 className="text-[11px] uppercase tracking-[0.4em] font-bold text-black/50">API Configuration</h3>
+                </div>
+                <p className="text-xs text-black/60 mb-8 leading-relaxed">
+                  Enter your Google Gemini API key for full functionality. Get your key at{' '}
+                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-[#D4AF37] font-bold hover:underline">
+                    Google AI Studio
+                  </a>
+                </p>
+                <div className="relative mb-4">
+                  <Key size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-[#D4AF37]" />
+                  <input 
+                    type={showApiKey ? "text" : "password"}
+                    value={localPrefs.apiKey || ''}
+                    onChange={(e) => setLocalPrefs({ ...localPrefs, apiKey: e.target.value })}
+                    placeholder="AIza••••••••••••••••••••••••••••"
+                    className="w-full bg-white border-2 border-[#D4AF37]/30 rounded-[1.5rem] pl-16 pr-16 py-4.5 text-sm font-mono placeholder:opacity-30 focus:ring-2 ring-[#D4AF37] transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowApiKey(!showApiKey)}
+                    className="absolute right-6 top-1/2 -translate-y-1/2 text-black/40 hover:text-[#D4AF37] transition-colors"
+                  >
+                    {showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <div className="flex items-start gap-3 px-4 py-3 bg-amber-50/50 border border-amber-200/50 rounded-2xl">
+                  <AlertCircle size={14} className="text-amber-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-[10px] text-amber-700 leading-relaxed">
+                    Your API key is stored locally in your browser and never sent to any server except Google's API.
+                  </p>
+                </div>
+             </div>
+
              <div className="bg-white p-10 md:p-12 rounded-[3.5rem] border border-black/[0.06] shadow-sm">
                 <div className="flex items-center gap-5 mb-10">
                   <ShieldAlert size={20} className="text-[#D4AF37]" />
@@ -159,7 +197,7 @@ const Settings: React.FC<SettingsProps> = ({ preferences, onUpdate, onBack }) =>
              </button>
 
              <button 
-               onClick={() => setLocalPrefs({ dietary: 'None', allergies: [], cuisinePreference: '', instamartSync: true, highFidelityVisuals: true })}
+               onClick={() => setLocalPrefs({ dietary: 'None', allergies: [], cuisinePreference: '', instamartSync: true, highFidelityVisuals: true, apiKey: '' })}
                className="w-full py-5 text-[11px] uppercase tracking-[0.4em] font-bold text-black/40 hover:text-rose-600 transition-colors flex items-center justify-center gap-4 hover:bg-rose-50 rounded-full"
              >
                 <Trash2 size={14} /> Reset Defaults

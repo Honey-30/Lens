@@ -37,12 +37,24 @@ const withRetry = async <T>(fn: () => Promise<T>, retries = 3, delay = 2000): Pr
 };
 
 /**
+ * Runtime API key storage (set from user preferences)
+ */
+let runtimeApiKey: string | null = null;
+
+/**
+ * Set runtime API key from user preferences
+ */
+export const setRuntimeApiKey = (key: string | null) => {
+  runtimeApiKey = key || null;
+};
+
+/**
  * Standardized AI Instance Creator.
- * Always use process.env.API_KEY exclusively.
+ * Priority: runtime key (from Settings) > environment variable
  */
 const getAi = () => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) throw new Error("API_KEY_NULL");
+  const apiKey = runtimeApiKey || process.env.API_KEY;
+  if (!apiKey) throw new Error("API_KEY_NULL - Please add your Google Gemini API key in Settings");
   return new GoogleGenAI({ apiKey });
 };
 
