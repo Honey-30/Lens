@@ -18,6 +18,32 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
-      }
+      },
+      build: {
+        rollupOptions: {
+          output: {
+            manualChunks: (id) => {
+              if (id.includes('node_modules')) {
+                if (id.includes('react') || id.includes('react-dom')) {
+                  return 'vendor-react';
+                }
+                if (id.includes('framer-motion')) {
+                  return 'vendor-animation';
+                }
+                if (id.includes('recharts')) {
+                  return 'vendor-charts';
+                }
+                if (id.includes('@google')) {
+                  return 'vendor-ai';
+                }
+                return 'vendor';
+              }
+            },
+          },
+        },
+        chunkSizeWarningLimit: 600,
+        sourcemap: false,
+        minify: 'esbuild',
+      },
     };
 });

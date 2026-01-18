@@ -8,6 +8,11 @@ import Synthesis from './components/Synthesis';
 import ExecutionMode from './components/ExecutionMode';
 import Settings from './components/Settings';
 import Header from './components/Header';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { db } from './utils/database';
+import { logger } from './utils/logger';
+import { performanceMonitor } from './utils/performance';
+import { prefetchCommonData } from './services/enhancedGeminiService';
 
 const App: React.FC = () => {
   const [viewState, setViewState] = useState<ViewState>(ViewState.LANDING);
@@ -24,15 +29,51 @@ const App: React.FC = () => {
     };
   });
 
+  // Initialize database and prefetch on mount
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        await db.initialize();
+        logger.info('[App] Database initialized');
+        
+        // Load persisted inventory
+        const savedIngredients = await db.getIngredients();
+        if (savedIngredients.length > 0) {
+          setInventory(savedIngredients.slice(0, 50)); // Limit to recent
+          logger.info('[App] Loaded persisted ingredients', { count: savedIngredients.length });
+        }
+
+        // Prefetch common data
+        await prefetchCommonData();
+      } catch (error) {
+        logger.error('[App] Initialization failed', { error }, error as Error);
+      }
+    };
+
+    initialize();
+    performanceMonitor.trackUserAction('app_mounted', 'lifecycle');
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('culinary_lens_prefs', JSON.stringify(preferences));
+    logger.debug('[App] Preferences updated', { preferences });
   }, [preferences]);
 
   const handleStart = () => setViewState(ViewState.UPLOAD);
   
-  const handleAnalysisComplete = (newIngredients: Ingredient[]) => {
+  const handleAnalysisComplete = async (newIngredients: Ingredient[]) => {
     setInventory(prev => [...prev, ...newIngredients]);
     setViewState(ViewState.DASHBOARD);
+    
+    // Persist to IndexedDB
+    try {
+      await Promise.all(newIngredients.map(ing => db.saveIngredient(ing)));
+      logger.info('[App] Ingredients persisted to database', { count: newIngredients.length });
+    } catch (error) {
+      logger.warn('[App] Failed to persist ingredients', { error });
+    }
+
+    performanceMonitor.trackUserAction('analysis_complete', 'ingredient', undefined, newIngredients.length);
   };
 
   const handleSynthesize = () => setViewState(ViewState.SYNTHESIS);
@@ -82,10 +123,7 @@ const App: React.FC = () => {
         );
       case ViewState.EXECUTION:
         return currentProtocol ? (
-          <ExecutionMode 
-            protocol={currentProtocol} 
-            onComplete={handleFinishExecution} 
-          />
+          <ExecutionMode protocol={currentProtocol} onComplete={handleFinishExecution} />
         ) : null;
       default:
         return <Landing onStart={handleStart} />;
@@ -93,14 +131,16 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen selection:bg-[#D4AF37]/20 selection:text-[#1A1A1D]">
-      {viewState !== ViewState.LANDING && viewState !== ViewState.EXECUTION && (
-        <Header viewState={viewState} onOpenSettings={() => setViewState(ViewState.SETTINGS)} />
-      )}
-      <main className="transition-all duration-1000 ease-in-out">
-        {renderView()}
-      </main>
-    </div>
+    <ErrorBoundary>
+      <div className="min-h-screen selection:bg-[#D4AF37]/20 selection:text-[#1A1A1D]">
+        {viewState !== ViewState.LANDING && viewState !== ViewState.EXECUTION && (
+          <Header viewState={viewState} onOpenSettings={() => setViewState(ViewState.SETTINGS)} />
+        )}
+        <main className="transition-all duration-1000 ease-in-out">
+          {renderView()}
+        </main>
+      </div>
+    </ErrorBoundary>
   );
 };
 

@@ -118,3 +118,27 @@ export interface UserPreferences {
 export interface PerceptionResult {
   ingredients: Ingredient[];
 }
+
+// Analytics & Performance Types
+export interface AnalyticsEvent {
+  id?: number;
+  event: string;
+  category: string;
+  timestamp: number;
+  metadata?: Record<string, any>;
+  sessionId?: string;
+}
+
+export interface PerformanceMetric {
+  name: string;
+  value: number;
+  rating: 'good' | 'needs-improvement' | 'poor';
+  timestamp: number;
+}
+
+export interface CacheStats {
+  hits: number;
+  misses: number;
+  size: number;
+  evictions: number;
+}
