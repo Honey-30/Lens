@@ -14,6 +14,8 @@ import { logger } from './utils/logger';
 import { performanceMonitor } from './utils/performance';
 import { prefetchCommonData } from './services/enhancedGeminiService';
 import { setRuntimeApiKey } from './services/geminiService';
+import { setImageGenApiKey } from './services/imageGenerationService';
+import { setSubstitutionApiKey } from './services/substitutionService';
 
 const App: React.FC = () => {
   const [viewState, setViewState] = useState<ViewState>(ViewState.LANDING);
@@ -35,8 +37,10 @@ const App: React.FC = () => {
   useEffect(() => {
     const initialize = async () => {
       try {
-        // Set runtime API key from saved preferences
+        // Set runtime API key from saved preferences (sync across all services)
         setRuntimeApiKey(preferences.apiKey || null);
+        setImageGenApiKey(preferences.apiKey || null);
+        setSubstitutionApiKey(preferences.apiKey || null);
         
         await db.initialize();
         logger.info('[App] Database initialized');
@@ -64,8 +68,10 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('culinary_lens_prefs', JSON.stringify(preferences));
     
-    // Set runtime API key whenever preferences change
+    // Set runtime API key whenever preferences change (sync across all services)
     setRuntimeApiKey(preferences.apiKey || null);
+    setImageGenApiKey(preferences.apiKey || null);
+    setSubstitutionApiKey(preferences.apiKey || null);
     
     logger.debug('[App] Preferences updated', { preferences: { ...preferences, apiKey: preferences.apiKey ? '***' : undefined } });
   }, [preferences]);
